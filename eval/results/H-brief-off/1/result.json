@@ -1,0 +1,533 @@
+{
+  "config": {
+    "id": "H-brief-off",
+    "model": "claude-haiku-5-5",
+    "spec": "brief",
+    "contour": false
+  },
+  "run": 1,
+  "pilot": false,
+  "status": "complete",
+  "startedAt": "2026-10-23T07:57:16.857Z",
+  "finishedAt": "2026-10-23T08:12:41.740Z",
+  "baseCommit": "541a56ff5977f131027cbcab71059da0ad1fcb21",
+  "claudeCodeVersion": "2.1.199",
+  "modelIds": [
+    "claude-haiku-5-5",
+    "claude-haiku-4-5-20251001"
+  ],
+  "effort": {
+    "passed": null,
+    "reportedByCli": null,
+    "documentedDefaultForModel": "medium",
+    "note": "--effort не передаётся; CLI 2.1.199 фактическое значение не сообщает"
+  },
+  "limits": {
+    "timeMs": 1500000,
+    "maxTurns": 300
+  },
+  "metrics": {
+    "wallMs": 651242,
+    "apiMs": 648335,
+    "turns": 57,
+    "requests": 31,
+    "terminalReason": "completed",
+    "exitCode": 0,
+    "blockedCheckAttempts": 3,
+    "leftoverProcessesKilled": 0
+  },
+  "tokens": {
+    "totals": {
+      "input": 2172,
+      "output": 142430,
+      "cacheWrite": 182395,
+      "cacheRead": 3749258,
+      "costUsd": 0.4888943599999999
+    },
+    "byModel": {
+      "claude-haiku-5-5": {
+        "requests": 31,
+        "input": 1639,
+        "output": 142408,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 182395,
+        "cacheRead": 3749258,
+        "costUsd": 0.4882513599999999
+      },
+      "claude-haiku-4-5-20251001": {
+        "requests": 0,
+        "input": 533,
+        "output": 22,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 0,
+        "cacheRead": 0,
+        "costUsd": 0.000643,
+        "background": true
+      }
+    },
+    "backgroundUsageKnown": true,
+    "usageCheck": {
+      "claude-haiku-5-5": {
+        "inputDiff": 0,
+        "outputDiff": 0,
+        "cacheReadDiff": 0,
+        "cacheWriteDiff": 0
+      }
+    },
+    "incompleteRequests": 0
+  },
+  "costUsd": 0.4888943599999999,
+  "cliCostUsd": 4.3608274,
+  "prices": {
+    "checkedAt": "2026-10-22",
+    "source": "https://platform.claude.com/docs/en/about-claude/pricing"
+  },
+  "usageWindow": {
+    "before": {
+      "at": "2026-10-23T07:57:19.062Z",
+      "sessionPercent": 18,
+      "sessionResets": "Oct 23 at 3:40pm (Europe/Moscow)",
+      "weekPercent": 22
+    },
+    "after": {
+      "at": "2026-10-23T08:12:41.680Z",
+      "sessionPercent": 23,
+      "sessionResets": "Oct 23 at 3:40pm (Europe/Moscow)",
+      "weekPercent": 23
+    },
+    "sessionDeltaPercent": 5,
+    "weekDeltaPercent": 1,
+    "note": "Окно общее для подписки: в дельту входят и запросы других сессий за то же время"
+  },
+  "protection": {
+    "violation": false,
+    "files": []
+  },
+  "isolation": {
+    "tools": [
+      "Task",
+      "Bash",
+      "CronCreate",
+      "CronDelete",
+      "CronList",
+      "DesignSync",
+      "Edit",
+      "EnterWorktree",
+      "ExitWorktree",
+      "Monitor",
+      "NotebookEdit",
+      "PushNotification",
+      "Read",
+      "RemoteTrigger",
+      "ReportFindings",
+      "ScheduleWakeup",
+      "SendMessage",
+      "TaskCreate",
+      "TaskGet",
+      "TaskList",
+      "TaskOutput",
+      "TaskStop",
+      "TaskUpdate",
+      "ToolSearch",
+      "WebFetch",
+      "WebSearch",
+      "Workflow",
+      "Write"
+    ],
+    "mcpServers": [],
+    "skills": [],
+    "plugins": [],
+    "memoryPaths": {
+      "auto": "$TMPDIR/sdd-eval-runs/H-brief-off-run1-20261023T075716.claude-config/projects/-TMPDIR-sdd-eval-runs-H-brief-off-run1-20261023T075716/memory/"
+    },
+    "apiKeySource": "none",
+    "leakSuspect": false,
+    "markers": [],
+    "forbiddenPathAttempts": 0,
+    "tokenFoundIn": []
+  },
+  "artifacts": {
+    "hasPlan": true,
+    "diff": {
+      "files": 28,
+      "added": 1327,
+      "removed": 2
+    },
+    "screens": [
+      {
+        "name": "01-default",
+        "ok": true,
+        "error": null
+      },
+      {
+        "name": "02-filtered",
+        "ok": true,
+        "error": null
+      },
+      {
+        "name": "03-after-back",
+        "ok": false,
+        "error": "\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed"
+      },
+      {
+        "name": "04-nothing-found",
+        "ok": true,
+        "error": null
+      }
+    ],
+    "logsDir": "~/.local/share/sdd-eval/runs/H-brief-off/run1-20261023T075716"
+  },
+  "acceptance": {
+    "rule": "критерий засчитан, если прошёл в большинстве из 3 повторов приёмки",
+    "summary": {
+      "passed": 3,
+      "failed": 12,
+      "total": 15
+    },
+    "flaky": [],
+    "criteria": {
+      "AC-01": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке: Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ hasNot: getByRole('columnheader') }) | Expected: 10 | Received: 19"
+      },
+      "AC-02": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-02 колонки по умолчанию: порядок, видимость, форматы: Error: expect(received).toEqual(expected) // deep equality"
+      },
+      "AC-03": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-04": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-05": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-05 фильтр по статусу передаётся в запрос: Error: expect(received).toEqual(expected) // deep equality"
+      },
+      "AC-06": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-06 смена фильтра и смена сортировки загружают первую порцию и прокручивают таблицу к началу: Error: expect(received).toBe(expected) // Object.is equality | Expected: true | Received: false"
+      },
+      "AC-07": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-07 сортировка по умолчанию отражена в aria-sort заголовка «Дата регистрации»: Error: expect(locator).not.toHaveAttribute(expected) failed | Locator: getByRole('table').or(getByRole('grid')).first().getByRole('columnheader', { name: 'Комиссия', exact: true }) | Expected pattern: not /ascending|descending/ | Timeout: 10000ms"
+      },
+      "AC-08": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-08 прокрутка к концу подгружает порции, загрузка прекращается при nextCursor = null: Error: expect(locator).toBeInViewport() failed | Locator: getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ has: getByRole('cell').or(getByRole('gridcell')) }).filter({ hasText: /\\S/ }).filter({ has: getByRole('cell').or(getByRole('gridcell')).nth(1) }).filter({ has: getByRole('cell').or(getByRole('gridcell')).filter({ hasText: /^\\s*Кононова Феврония Григорьевна\\s*$/ }) }) | Expected: in viewport | Timeout: 10000ms"
+      },
+      "AC-09": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-09 пусто без фильтров: Error: expect(locator).toBeVisible() failed | Locator: getByText('У вас пока нет клиентов. Поделитесь реферальной ссылкой, чтобы пригласить первого') | Expected: visible | Timeout: 10000ms"
+      },
+      "AC-10": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-10 фильтры и сортировка отражаются в адресной строке, сортировка по умолчанию не пишется: Error: expect(received).toEqual(expected) // deep equality"
+      },
+      "AC-11": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-11 «Назад» браузера: фильтры, сортировка, строки без повторного запроса, строка перехода видна: Error: expect(received).toMatch(expected) | Expected pattern: /^\\/clients\\/[^/]+$/ | Received string:  \"/clients\""
+      },
+      "AC-12": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-12 после перезагрузки восстанавливаются фильтры и сортировка: Test timeout of 60000ms exceeded."
+      },
+      "AC-13": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-13 скрытая колонка сохраняется между сессиями, не попадает в адрес, у другого агента своя настройка: Test timeout of 60000ms exceeded."
+      },
+      "AC-14": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-14 у полей фильтров есть доступные подписи: Error: expect(locator).toBeVisible() failed | Locator: getByLabel('Период регистрации').first() | Expected: visible | Timeout: 10000ms"
+      },
+      "AC-15": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      }
+    }
+  },
+  "acPassed": 3,
+  "acCounted": 3,
+  "accepted": false,
+  "agentResultText": "Раздел «Мои клиенты» реализован по `SPEC.md` и `conventions.md`, план записан в `PLAN.md`. Проверки не запускались: `npm`, `tsc` и `node` с `node_modules` в этой среде заблокированы («Команда недоступна в этой конфигурации»). Код не компилировался, линтер и тесты не прогонялись, поэтому ошибки типов, линтера и селекторы в тестах могут остаться.\n\nЧто сделано:\n- **Слои:** `entities/client` (схема URL, API, запросы, хук), `shared/lib/date`, `features/client-list-filters`, `features/client-columns-settings`, `widgets/clients-table`, правки в `pages/clients` и `app/router.tsx`.\n- **Состояние:** фильтры, поиск и сортировка лежат в URL, список в кэше TanStack Query, видимость колонок в `localStorage` по агенту.\n- **Тесты:** unit для схемы URL, даты в МСК и `localStorage`; интеграционные для таблицы через `renderApp` и MSW; E2E в `e2e/clients.spec.ts` для догрузки, восстановления после «назад» и ссылки с параметрами.\n- **Защищённые файлы** не тронуты. `git status` показывает только новые файлы и изменения в `router.tsx` и `ClientsPage.tsx`.\n\nГлавные допущения (подробно в `PLAN.md`, раздел «Вопросы к спеке»): подписи статусов («Лид», «Счёт открыт», «Пополнил», «Неактивен»), потому что п. 4.2 со статусами в репозитории нет; поиск короче двух символов не отправляется; настройка колонок только по видимости, ФИО скрыть нельзя.\n\nСледующий шаг: запустить `npm run check`, затем `npm run test:e2e` в среде, где команды разрешены, и поправить то, что упадёт.",
+  "acceptanceHistory": [
+    {
+      "at": "2026-10-23T08:12:41.740Z",
+      "summary": {
+        "passed": 3,
+        "failed": 12,
+        "total": 15
+      },
+      "criteria": {
+        "AC-01": {
+          "status": "failed",
+          "reason": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке: Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ has: getByRole('cell').or(getByRole('gridcell')) }) | Expected: 10 | Received: 19"
+        },
+        "AC-02": {
+          "status": "failed",
+          "reason": "AC-02 колонки по умолчанию: порядок, видимость, форматы: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-03": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-04": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-05": {
+          "status": "failed",
+          "reason": "AC-05 фильтр по статусу передаётся в запрос: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-06": {
+          "status": "failed",
+          "reason": "AC-06 смена фильтра и смена сортировки загружают первую порцию и прокручивают таблицу к началу: Error: expect(received).toBe(expected) // Object.is equality | Expected: true | Received: false"
+        },
+        "AC-07": {
+          "status": "failed",
+          "reason": "AC-07 сортировка по умолчанию отражена в aria-sort заголовка «Дата регистрации»: Error: expect(locator).not.toHaveAttribute(expected) failed | Locator: getByRole('table').or(getByRole('grid')).first().getByRole('columnheader', { name: 'Комиссия', exact: true }) | Expected pattern: not /ascending|descending/ | Timeout: 10000ms"
+        },
+        "AC-08": {
+          "status": "failed",
+          "reason": "AC-08 прокрутка к концу подгружает порции, загрузка прекращается при nextCursor = null: Error: expect(locator).toBeInViewport() failed | Locator: getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ has: getByRole('cell').or(getByRole('gridcell')) }).filter({ hasText: /\\S/ }).filter({ has: getByRole('cell').or(getByRole('gridcell')).nth(1) }).filter({ has: getByRole('cell').or(getByRole('gridcell')).filter({ hasText: /^\\s*Кононова Феврония Григорьевна\\s*$/ }) }) | Expected: in viewport | Timeout: 10000ms"
+        },
+        "AC-09": {
+          "status": "failed",
+          "reason": "AC-09 пусто без фильтров: Error: expect(locator).toBeVisible() failed | Locator: getByText('У вас пока нет клиентов. Поделитесь реферальной ссылкой, чтобы пригласить первого') | Expected: visible | Timeout: 10000ms"
+        },
+        "AC-10": {
+          "status": "failed",
+          "reason": "AC-10 фильтры и сортировка отражаются в адресной строке, сортировка по умолчанию не пишется: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-11": {
+          "status": "failed",
+          "reason": "AC-11 «Назад» браузера: фильтры, сортировка, строки без повторного запроса, строка перехода видна: Error: expect(received).toMatch(expected) | Expected pattern: /^\\/clients\\/[^/]+$/ | Received string:  \"/clients\""
+        },
+        "AC-12": {
+          "status": "failed",
+          "reason": "AC-12 после перезагрузки восстанавливаются фильтры и сортировка: Test timeout of 60000ms exceeded."
+        },
+        "AC-13": {
+          "status": "failed",
+          "reason": "AC-13 скрытая колонка сохраняется между сессиями, не попадает в адрес, у другого агента своя настройка: Test timeout of 60000ms exceeded."
+        },
+        "AC-14": {
+          "status": "failed",
+          "reason": "AC-14 у полей фильтров есть доступные подписи: Error: expect(locator).toBeVisible() failed | Locator: getByLabel('Период регистрации').first() | Expected: visible | Timeout: 10000ms"
+        },
+        "AC-15": {
+          "status": "passed",
+          "reason": null
+        }
+      },
+      "replacedBecause": "AC-01 после круга 1: скелетон считается по строкам таблицы без columnheader, а не по строкам с ячейками (спека, п. 7, ячеек не требует)"
+    },
+    {
+      "at": "2026-10-23T10:10:15.095Z",
+      "summary": {
+        "passed": 3,
+        "failed": 12,
+        "total": 15
+      },
+      "criteria": {
+        "AC-01": {
+          "status": "failed",
+          "reason": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке: Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ hasNot: getByRole('columnheader') }) | Expected: 10 | Received: 19"
+        },
+        "AC-02": {
+          "status": "failed",
+          "reason": "AC-02 колонки по умолчанию: порядок, видимость, форматы: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-03": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-04": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-05": {
+          "status": "failed",
+          "reason": "AC-05 фильтр по статусу передаётся в запрос: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-06": {
+          "status": "failed",
+          "reason": "AC-06 смена фильтра и смена сортировки загружают первую порцию и прокручивают таблицу к началу: Error: expect(received).toBe(expected) // Object.is equality | Expected: true | Received: false"
+        },
+        "AC-07": {
+          "status": "failed",
+          "reason": "AC-07 сортировка по умолчанию отражена в aria-sort заголовка «Дата регистрации»: Error: expect(locator).not.toHaveAttribute(expected) failed | Locator: getByRole('table').or(getByRole('grid')).first().getByRole('columnheader', { name: 'Комиссия', exact: true }) | Expected pattern: not /ascending|descending/ | Timeout: 10000ms"
+        },
+        "AC-08": {
+          "status": "failed",
+          "reason": "AC-08 прокрутка к концу подгружает порции, загрузка прекращается при nextCursor = null: Error: expect(locator).toBeInViewport() failed | Locator: getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ has: getByRole('cell').or(getByRole('gridcell')) }).filter({ hasText: /\\S/ }).filter({ has: getByRole('cell').or(getByRole('gridcell')).nth(1) }).filter({ has: getByRole('cell').or(getByRole('gridcell')).filter({ hasText: /^\\s*Кононова Феврония Григорьевна\\s*$/ }) }) | Expected: in viewport | Timeout: 10000ms"
+        },
+        "AC-09": {
+          "status": "failed",
+          "reason": "AC-09 пусто без фильтров: Error: expect(locator).toBeVisible() failed | Locator: getByText('У вас пока нет клиентов. Поделитесь реферальной ссылкой, чтобы пригласить первого') | Expected: visible | Timeout: 10000ms"
+        },
+        "AC-10": {
+          "status": "failed",
+          "reason": "AC-10 фильтры и сортировка отражаются в адресной строке, сортировка по умолчанию не пишется: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-11": {
+          "status": "failed",
+          "reason": "AC-11 «Назад» браузера: фильтры, сортировка, строки без повторного запроса, строка перехода видна: Error: expect(received).toMatch(expected) | Expected pattern: /^\\/clients\\/[^/]+$/ | Received string:  \"/clients\""
+        },
+        "AC-12": {
+          "status": "failed",
+          "reason": "AC-12 после перезагрузки восстанавливаются фильтры и сортировка: Test timeout of 60000ms exceeded."
+        },
+        "AC-13": {
+          "status": "failed",
+          "reason": "AC-13 скрытая колонка сохраняется между сессиями, не попадает в адрес, у другого агента своя настройка: Test timeout of 60000ms exceeded."
+        },
+        "AC-14": {
+          "status": "failed",
+          "reason": "AC-14 у полей фильтров есть доступные подписи: Error: expect(locator).toBeVisible() failed | Locator: getByLabel('Период регистрации').first() | Expected: visible | Timeout: 10000ms"
+        },
+        "AC-15": {
+          "status": "passed",
+          "reason": null
+        }
+      },
+      "replacedBecause": "AC-15 считает уникальные успешные запросы; оценка по большинству из 3 повторов приёмки"
+    },
+    {
+      "at": "2026-10-23T11:42:41.029Z",
+      "rule": "критерий засчитан, если прошёл в большинстве из 3 повторов приёмки",
+      "summary": {
+        "passed": 3,
+        "failed": 12,
+        "total": 15
+      },
+      "flaky": [],
+      "criteria": {
+        "AC-01": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке: Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ hasNot: getByRole('columnheader') }) | Expected: 10 | Received: 19"
+        },
+        "AC-02": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-02 колонки по умолчанию: порядок, видимость, форматы: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-03": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-04": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-05": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-05 фильтр по статусу передаётся в запрос: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-06": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-06 смена фильтра и смена сортировки загружают первую порцию и прокручивают таблицу к началу: Error: expect(received).toBe(expected) // Object.is equality | Expected: true | Received: false"
+        },
+        "AC-07": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-07 сортировка по умолчанию отражена в aria-sort заголовка «Дата регистрации»: Error: expect(locator).not.toHaveAttribute(expected) failed | Locator: getByRole('table').or(getByRole('grid')).first().getByRole('columnheader', { name: 'Комиссия', exact: true }) | Expected pattern: not /ascending|descending/ | Timeout: 10000ms"
+        },
+        "AC-08": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-08 прокрутка к концу подгружает порции, загрузка прекращается при nextCursor = null: Error: expect(locator).toBeInViewport() failed | Locator: getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ has: getByRole('cell').or(getByRole('gridcell')) }).filter({ hasText: /\\S/ }).filter({ has: getByRole('cell').or(getByRole('gridcell')).nth(1) }).filter({ has: getByRole('cell').or(getByRole('gridcell')).filter({ hasText: /^\\s*Кононова Феврония Григорьевна\\s*$/ }) }) | Expected: in viewport | Timeout: 10000ms"
+        },
+        "AC-09": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-09 пусто без фильтров: Error: expect(locator).toBeVisible() failed | Locator: getByText('У вас пока нет клиентов. Поделитесь реферальной ссылкой, чтобы пригласить первого') | Expected: visible | Timeout: 10000ms"
+        },
+        "AC-10": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-10 фильтры и сортировка отражаются в адресной строке, сортировка по умолчанию не пишется: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-11": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-11 «Назад» браузера: фильтры, сортировка, строки без повторного запроса, строка перехода видна: Error: expect(received).toMatch(expected) | Expected pattern: /^\\/clients\\/[^/]+$/ | Received string:  \"/clients\""
+        },
+        "AC-12": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-12 после перезагрузки восстанавливаются фильтры и сортировка: Test timeout of 60000ms exceeded."
+        },
+        "AC-13": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-13 скрытая колонка сохраняется между сессиями, не попадает в адрес, у другого агента своя настройка: Test timeout of 60000ms exceeded."
+        },
+        "AC-14": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-14 у полей фильтров есть доступные подписи: Error: expect(locator).toBeVisible() failed | Locator: getByLabel('Период регистрации').first() | Expected: visible | Timeout: 10000ms"
+        },
+        "AC-15": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        }
+      },
+      "replacedBecause": "Правка 6: помощник выбора статуса ждёт отрисовки пункта списка до 5 с, прежде чем перейти к вводу"
+    }
+  ],
+  "acceptanceRescoredAt": "2026-10-26T07:21:26.743Z"
+}

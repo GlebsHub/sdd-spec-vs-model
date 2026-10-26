@@ -1,0 +1,12 @@
+.page {
+  flex: 1;
+  min-height: 0;
+}
+
+.title {
+  margin: 0;
+}
+
+.counter {
+  font-size: var(--ant-font-size-heading-4);
+}

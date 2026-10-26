@@ -1,0 +1,538 @@
+{
+  "config": {
+    "id": "H-full-off",
+    "model": "claude-haiku-5-5",
+    "spec": "full",
+    "contour": false
+  },
+  "run": 1,
+  "pilot": false,
+  "status": "complete",
+  "startedAt": "2026-10-23T08:12:43.974Z",
+  "finishedAt": "2026-10-23T08:28:57.037Z",
+  "baseCommit": "541a56ff5977f131027cbcab71059da0ad1fcb21",
+  "claudeCodeVersion": "2.1.199",
+  "modelIds": [
+    "claude-haiku-5-5",
+    "claude-haiku-4-5-20251001"
+  ],
+  "effort": {
+    "passed": null,
+    "reportedByCli": null,
+    "documentedDefaultForModel": "medium",
+    "note": "--effort не передаётся; CLI 2.1.199 фактическое значение не сообщает"
+  },
+  "limits": {
+    "timeMs": 1500000,
+    "maxTurns": 300
+  },
+  "metrics": {
+    "wallMs": 786174,
+    "apiMs": 784479,
+    "turns": 65,
+    "requests": 42,
+    "terminalReason": "completed",
+    "exitCode": 0,
+    "blockedCheckAttempts": 3,
+    "leftoverProcessesKilled": 0
+  },
+  "tokens": {
+    "totals": {
+      "input": 2454,
+      "output": 170295,
+      "cacheWrite": 169384,
+      "cacheRead": 5318199,
+      "costUsd": 0.6224056700000001
+    },
+    "byModel": {
+      "claude-haiku-5-5": {
+        "requests": 42,
+        "input": 1921,
+        "output": 170273,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 169384,
+        "cacheRead": 5318199,
+        "costUsd": 0.6217626700000002
+      },
+      "claude-haiku-4-5-20251001": {
+        "requests": 0,
+        "input": 533,
+        "output": 22,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 0,
+        "cacheRead": 0,
+        "costUsd": 0.000643,
+        "background": true
+      }
+    },
+    "backgroundUsageKnown": true,
+    "usageCheck": {
+      "claude-haiku-5-5": {
+        "inputDiff": 0,
+        "outputDiff": 0,
+        "cacheReadDiff": 0,
+        "cacheWriteDiff": 0
+      }
+    },
+    "incompleteRequests": 0
+  },
+  "costUsd": 0.6224056700000001,
+  "cliCostUsd": 5.172264700000001,
+  "prices": {
+    "checkedAt": "2026-10-22",
+    "source": "https://platform.claude.com/docs/en/about-claude/pricing"
+  },
+  "usageWindow": {
+    "before": {
+      "at": "2026-10-23T08:12:45.950Z",
+      "sessionPercent": 23,
+      "sessionResets": "Oct 23 at 3:40pm (Europe/Moscow)",
+      "weekPercent": 23
+    },
+    "after": {
+      "at": "2026-10-23T08:28:56.967Z",
+      "sessionPercent": 29,
+      "sessionResets": "Oct 23 at 3:40pm (Europe/Moscow)",
+      "weekPercent": 23
+    },
+    "sessionDeltaPercent": 6,
+    "weekDeltaPercent": 0,
+    "note": "Окно общее для подписки: в дельту входят и запросы других сессий за то же время"
+  },
+  "protection": {
+    "violation": false,
+    "files": []
+  },
+  "isolation": {
+    "tools": [
+      "Task",
+      "Bash",
+      "CronCreate",
+      "CronDelete",
+      "CronList",
+      "DesignSync",
+      "Edit",
+      "EnterWorktree",
+      "ExitWorktree",
+      "Monitor",
+      "NotebookEdit",
+      "PushNotification",
+      "Read",
+      "RemoteTrigger",
+      "ReportFindings",
+      "ScheduleWakeup",
+      "SendMessage",
+      "TaskCreate",
+      "TaskGet",
+      "TaskList",
+      "TaskOutput",
+      "TaskStop",
+      "TaskUpdate",
+      "ToolSearch",
+      "WebFetch",
+      "WebSearch",
+      "Workflow",
+      "Write"
+    ],
+    "mcpServers": [],
+    "skills": [],
+    "plugins": [],
+    "memoryPaths": {
+      "auto": "$TMPDIR/sdd-eval-runs/H-full-off-run1-20261023T081243.claude-config/projects/-TMPDIR-sdd-eval-runs-H-full-off-run1-20261023T081243/memory/"
+    },
+    "apiKeySource": "none",
+    "leakSuspect": false,
+    "markers": [],
+    "forbiddenPathAttempts": 0,
+    "tokenFoundIn": []
+  },
+  "artifacts": {
+    "hasPlan": true,
+    "diff": {
+      "files": 26,
+      "added": 1260,
+      "removed": 6
+    },
+    "screens": [
+      {
+        "name": "01-default",
+        "ok": true,
+        "error": null
+      },
+      {
+        "name": "02-filtered",
+        "ok": true,
+        "error": null
+      },
+      {
+        "name": "03-after-back",
+        "ok": true,
+        "error": null
+      },
+      {
+        "name": "04-nothing-found",
+        "ok": true,
+        "error": null
+      },
+      {
+        "name": "05-next-page-error",
+        "ok": true,
+        "error": null
+      }
+    ],
+    "logsDir": "~/.local/share/sdd-eval/runs/H-full-off/run1-20261023T081243"
+  },
+  "acceptance": {
+    "rule": "критерий засчитан, если прошёл в большинстве из 3 повторов приёмки",
+    "summary": {
+      "passed": 9,
+      "failed": 6,
+      "total": 15
+    },
+    "flaky": [],
+    "criteria": {
+      "AC-01": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке: Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ hasNot: getByRole('columnheader') }) | Expected: 10 | Received: 21"
+      },
+      "AC-02": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-03": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-04": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-04 посимвольный ввод «Иванов» — ровно один запрос с q=Иванов после паузы 300 мс: Test timeout of 60000ms exceeded."
+      },
+      "AC-05": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-06": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-07": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-07 клик по заголовку: desc → asc → desc, в запросе и в aria-sort: Test timeout of 60000ms exceeded."
+      },
+      "AC-08": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-09": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-09 пусто с фильтрами: «Ничего не найдено» и «Сбросить фильтры»: Test timeout of 60000ms exceeded."
+      },
+      "AC-10": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-11": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-12": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-13": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-13 скрытая колонка сохраняется между сессиями, не попадает в адрес, у другого агента своя настройка: Test timeout of 60000ms exceeded."
+      },
+      "AC-14": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-14 строка доступна по Tab, Enter открывает карточку этого клиента: Test timeout of 60000ms exceeded."
+      },
+      "AC-15": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      }
+    }
+  },
+  "acPassed": 9,
+  "acCounted": 9,
+  "accepted": false,
+  "agentResultText": "Раздел «Мои клиенты» реализован по `SPEC.md` и `CLAUDE.md`, но ничего не проверено прогоном: команды `vitest`, `tsc`, `eslint` и `playwright` в этой среде отказываются запускаться («Команда недоступна в этой конфигурации»). Я не стал искать обходы.\n\n**Что сделано**\n- `PLAN.md` в корне: файлы по слоям, где хранится каждое состояние, сопоставление AC-01…AC-15 с тестами и 8 вопросов к спеке с допущениями. Файл не удалён.\n- Новый код: `entities/clients` (URL-схема, маппинг параметров, запросы, хук), `features/client-filters` (поиск с debounce 300 мс, статус, период, сброс), `features/client-columns` (колонки, `localStorage` по агенту, Zod-проверка), `widgets/clients-table` (виртуализированная таблица со всеми состояниями и догрузкой), `pages/clients`.\n- `src/app/router.tsx`: `validateSearch`, `scrollRestoration`, уникальный ключ скролла на загрузку документа, `scrollToTopSelectors`.\n- Тесты: unit для URL-логики и хранилища колонок, интеграционные для таблицы, E2E в `e2e/clients.spec.ts`.\n- Защищённые файлы не изменены, новые зависимости не добавлялись. Коммита нет.\n\n**Что проверить первым**\n- Typecheck, lint и тесты. Типы писались без `tsc`, поэтому ошибки возможны.\n- Интеграционные тесты таблицы используют моки `offsetHeight` для виртуализатора и прокрутку через `scrollTop`. Это самые хрупкие места.\n- Доступность периода и статуса: `aria-label` у компонентов AntD не подтверждён в их типах, поэтому подписи сделаны через `label htmlFor` и `role=\"group\"`.\n- Имена API TanStack (`scrollToTopSelectors`, `getScrollRestorationKey`, `useElementScrollRestoration`, `virtualizer.range`) сверены с установленными `.d.ts`.\n\n**Отклонения и допущения** (подробно в `PLAN.md`)\n- Zod-схема параметров лежит в `entities/clients/params.ts`, а не в `schema.ts` сущности: `shared/api/clients/**` защищён.\n- Значения фильтров в URL хранятся строками, без JSON-сериализации TanStack Router.",
+  "acceptanceHistory": [
+    {
+      "at": "2026-10-23T08:28:57.037Z",
+      "summary": {
+        "passed": 7,
+        "failed": 8,
+        "total": 15
+      },
+      "criteria": {
+        "AC-01": {
+          "status": "failed",
+          "reason": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке: Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ has: getByRole('cell').or(getByRole('gridcell')) }) | Expected: 10 | Received: 21"
+        },
+        "AC-02": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-03": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-04": {
+          "status": "failed",
+          "reason": "AC-04 посимвольный ввод «Иванов» — ровно один запрос с q=Иванов после паузы 300 мс: Test timeout of 60000ms exceeded."
+        },
+        "AC-05": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-06": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-07": {
+          "status": "failed",
+          "reason": "AC-07 клик по заголовку: desc → asc → desc, в запросе и в aria-sort: Test timeout of 60000ms exceeded."
+        },
+        "AC-08": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-09": {
+          "status": "failed",
+          "reason": "AC-09 пусто с фильтрами: «Ничего не найдено» и «Сбросить фильтры»: Test timeout of 60000ms exceeded."
+        },
+        "AC-10": {
+          "status": "failed",
+          "reason": "AC-10 фильтры и сортировка отражаются в адресной строке, сортировка по умолчанию не пишется: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-11": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-12": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-13": {
+          "status": "failed",
+          "reason": "AC-13 скрытая колонка сохраняется между сессиями, не попадает в адрес, у другого агента своя настройка: Test timeout of 60000ms exceeded."
+        },
+        "AC-14": {
+          "status": "failed",
+          "reason": "AC-14 строка доступна по Tab, Enter открывает карточку этого клиента: Test timeout of 60000ms exceeded."
+        },
+        "AC-15": {
+          "status": "failed",
+          "reason": "AC-15 при 10 000 загруженных строк в DOM не более 60 строк таблицы: Error: expect(received).toBe(expected) // Object.is equality | Expected: 200 | Received: 201"
+        }
+      },
+      "replacedBecause": "AC-01 после круга 1: скелетон считается по строкам таблицы без columnheader, а не по строкам с ячейками (спека, п. 7, ячеек не требует)"
+    },
+    {
+      "at": "2026-10-23T10:13:01.413Z",
+      "summary": {
+        "passed": 8,
+        "failed": 7,
+        "total": 15
+      },
+      "criteria": {
+        "AC-01": {
+          "status": "failed",
+          "reason": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке: Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ hasNot: getByRole('columnheader') }) | Expected: 10 | Received: 21"
+        },
+        "AC-02": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-03": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-04": {
+          "status": "failed",
+          "reason": "AC-04 посимвольный ввод «Иванов» — ровно один запрос с q=Иванов после паузы 300 мс: Test timeout of 60000ms exceeded."
+        },
+        "AC-05": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-06": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-07": {
+          "status": "failed",
+          "reason": "AC-07 клик по заголовку: desc → asc → desc, в запросе и в aria-sort: Test timeout of 60000ms exceeded."
+        },
+        "AC-08": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-09": {
+          "status": "failed",
+          "reason": "AC-09 пусто с фильтрами: «Ничего не найдено» и «Сбросить фильтры»: Test timeout of 60000ms exceeded."
+        },
+        "AC-10": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-11": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-12": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-13": {
+          "status": "failed",
+          "reason": "AC-13 скрытая колонка сохраняется между сессиями, не попадает в адрес, у другого агента своя настройка: Test timeout of 60000ms exceeded."
+        },
+        "AC-14": {
+          "status": "failed",
+          "reason": "AC-14 строка доступна по Tab, Enter открывает карточку этого клиента: Test timeout of 60000ms exceeded."
+        },
+        "AC-15": {
+          "status": "failed",
+          "reason": "AC-15 при 10 000 загруженных строк в DOM не более 60 строк таблицы: Error: expect(received).toBe(expected) // Object.is equality | Expected: 200 | Received: 201"
+        }
+      },
+      "replacedBecause": "AC-15 считает уникальные успешные запросы; оценка по большинству из 3 повторов приёмки"
+    },
+    {
+      "at": "2026-10-23T11:50:37.264Z",
+      "rule": "критерий засчитан, если прошёл в большинстве из 3 повторов приёмки",
+      "summary": {
+        "passed": 9,
+        "failed": 6,
+        "total": 15
+      },
+      "flaky": [],
+      "criteria": {
+        "AC-01": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке: Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ hasNot: getByRole('columnheader') }) | Expected: 10 | Received: 21"
+        },
+        "AC-02": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-03": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-04": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-04 посимвольный ввод «Иванов» — ровно один запрос с q=Иванов после паузы 300 мс: Test timeout of 60000ms exceeded."
+        },
+        "AC-05": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-06": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-07": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-07 клик по заголовку: desc → asc → desc, в запросе и в aria-sort: Test timeout of 60000ms exceeded."
+        },
+        "AC-08": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-09": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-09 пусто с фильтрами: «Ничего не найдено» и «Сбросить фильтры»: Test timeout of 60000ms exceeded."
+        },
+        "AC-10": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-11": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-12": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-13": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-13 скрытая колонка сохраняется между сессиями, не попадает в адрес, у другого агента своя настройка: Test timeout of 60000ms exceeded."
+        },
+        "AC-14": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-14 строка доступна по Tab, Enter открывает карточку этого клиента: Test timeout of 60000ms exceeded."
+        },
+        "AC-15": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        }
+      },
+      "replacedBecause": "Правка 6: помощник выбора статуса ждёт отрисовки пункта списка до 5 с, прежде чем перейти к вводу"
+    }
+  ],
+  "acceptanceRescoredAt": "2026-10-26T07:29:21.685Z"
+}

@@ -1,0 +1,541 @@
+{
+  "config": {
+    "id": "S-full-off",
+    "model": "claude-sonnet-5-5",
+    "spec": "full",
+    "contour": false
+  },
+  "run": 1,
+  "pilot": false,
+  "status": "complete",
+  "startedAt": "2026-10-23T09:09:41.907Z",
+  "finishedAt": "2026-10-23T09:30:58.464Z",
+  "baseCommit": "541a56ff5977f131027cbcab71059da0ad1fcb21",
+  "claudeCodeVersion": "2.1.199",
+  "modelIds": [
+    "claude-sonnet-5-5",
+    "claude-haiku-4-5-20251001"
+  ],
+  "effort": {
+    "passed": null,
+    "reportedByCli": null,
+    "documentedDefaultForModel": "high",
+    "note": "--effort не передаётся; CLI 2.1.199 фактическое значение не сообщает"
+  },
+  "limits": {
+    "timeMs": 1500000,
+    "maxTurns": 300
+  },
+  "metrics": {
+    "wallMs": 1209674,
+    "apiMs": 1207403,
+    "turns": 101,
+    "requests": 52,
+    "terminalReason": "completed",
+    "exitCode": 0,
+    "blockedCheckAttempts": 5,
+    "leftoverProcessesKilled": 0
+  },
+  "tokens": {
+    "totals": {
+      "input": 2599,
+      "output": 154981,
+      "cacheWrite": 240651,
+      "cacheRead": 7395334,
+      "costUsd": 3.256492400000001
+    },
+    "byModel": {
+      "claude-sonnet-5-5": {
+        "requests": 52,
+        "input": 2066,
+        "output": 154957,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 240651,
+        "cacheRead": 7395334,
+        "costUsd": 3.255839400000001
+      },
+      "claude-haiku-4-5-20251001": {
+        "requests": 0,
+        "input": 533,
+        "output": 24,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 0,
+        "cacheRead": 0,
+        "costUsd": 0.0006529999999999999,
+        "background": true
+      }
+    },
+    "backgroundUsageKnown": true,
+    "usageCheck": {
+      "claude-sonnet-5-5": {
+        "inputDiff": 0,
+        "outputDiff": 0,
+        "cacheReadDiff": 0,
+        "cacheWriteDiff": 0
+      }
+    },
+    "incompleteRequests": 0
+  },
+  "costUsd": 3.256492400000001,
+  "cliCostUsd": 5.9937122,
+  "prices": {
+    "checkedAt": "2026-10-22",
+    "source": "https://platform.claude.com/docs/en/about-claude/pricing"
+  },
+  "usageWindow": {
+    "before": {
+      "at": "2026-10-23T09:09:44.419Z",
+      "sessionPercent": 42,
+      "sessionResets": "Oct 23 at 3:39pm (Europe/Moscow)",
+      "weekPercent": 24
+    },
+    "after": {
+      "at": "2026-10-23T09:30:58.382Z",
+      "sessionPercent": 68,
+      "sessionResets": "Oct 23 at 3:40pm (Europe/Moscow)",
+      "weekPercent": 26
+    },
+    "sessionDeltaPercent": 26,
+    "weekDeltaPercent": 2,
+    "note": "Окно общее для подписки: в дельту входят и запросы других сессий за то же время",
+    "sessionDeltaBackfill": "23.10.2026: пересчитано из before/after; прежде null из-за расхождения времени сброса на 1 мин"
+  },
+  "protection": {
+    "violation": false,
+    "files": []
+  },
+  "isolation": {
+    "tools": [
+      "Task",
+      "Bash",
+      "CronCreate",
+      "CronDelete",
+      "CronList",
+      "DesignSync",
+      "Edit",
+      "EnterWorktree",
+      "ExitWorktree",
+      "Monitor",
+      "NotebookEdit",
+      "PushNotification",
+      "Read",
+      "RemoteTrigger",
+      "ReportFindings",
+      "ScheduleWakeup",
+      "SendMessage",
+      "TaskCreate",
+      "TaskGet",
+      "TaskList",
+      "TaskOutput",
+      "TaskStop",
+      "TaskUpdate",
+      "ToolSearch",
+      "WebFetch",
+      "WebSearch",
+      "Workflow",
+      "Write"
+    ],
+    "mcpServers": [],
+    "skills": [],
+    "plugins": [],
+    "memoryPaths": {
+      "auto": "$TMPDIR/sdd-eval-runs/S-full-off-run1-20261023T090941.claude-config/projects/-TMPDIR-sdd-eval-runs-S-full-off-run1-20261023T090941/memory/"
+    },
+    "apiKeySource": "none",
+    "leakSuspect": false,
+    "markers": [],
+    "forbiddenPathAttempts": 0,
+    "tokenFoundIn": []
+  },
+  "artifacts": {
+    "hasPlan": true,
+    "diff": {
+      "files": 39,
+      "added": 2295,
+      "removed": 7
+    },
+    "screens": [
+      {
+        "name": "01-default",
+        "ok": true,
+        "error": null
+      },
+      {
+        "name": "02-filtered",
+        "ok": true,
+        "error": null
+      },
+      {
+        "name": "03-after-back",
+        "ok": true,
+        "error": null
+      },
+      {
+        "name": "04-nothing-found",
+        "ok": true,
+        "error": null
+      },
+      {
+        "name": "05-next-page-error",
+        "ok": true,
+        "error": null
+      }
+    ],
+    "logsDir": "~/.local/share/sdd-eval/runs/S-full-off/run1-20261023T090941"
+  },
+  "acceptance": {
+    "rule": "критерий засчитан, если прошёл в большинстве из 3 повторов приёмки",
+    "summary": {
+      "passed": 15,
+      "failed": 0,
+      "total": 15
+    },
+    "flaky": [],
+    "criteria": {
+      "AC-01": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-02": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-03": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-04": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-05": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-06": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-07": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-08": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-09": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-10": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-11": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-12": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-13": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-14": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-15": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      }
+    }
+  },
+  "acPassed": 15,
+  "acCounted": 15,
+  "accepted": true,
+  "agentResultText": "Раздел «Мои клиенты» написан по `SPEC.md`, но ни одной проверки я не запускал. В этой конфигурации Bash отклоняет `tsc`, `npm` и `npx` с сообщением «Команда недоступна», а блокировку я обходить не стал. Типы, линтер, Vitest и Playwright не проверены, и в коде могут быть ошибки типов или падающие тесты. Перед использованием нужно прогнать `npm run check` и `npm run test:e2e`.\n\n- **`PLAN.md`** лежит в корне. В нём файлы по слоям, где хранится каждое состояние, соответствие всех AC-01…AC-15 коду и тестам и 19 допущений в разделе «Вопросы к спеке».\n- **Слои.**\n  - `entities/client` — схема параметров URL, API, запросы, хук `useClients`, статусы и колонки.\n  - `features/clients-filters` — фильтры, debounce поиска, запись в URL.\n  - `features/column-settings` — настройка колонок, хранение в `localStorage`.\n  - `widgets/clients-table` — виртуализированная таблица и все состояния.\n  - `pages/clients` — валидация параметров URL и предзагрузка первой порции.\n  - `app/router.tsx` и `searchParams.ts` — обновлённый роутер: восстановление прокрутки и URL вида `status=LEAD,FUNDED&sort=commissionKopecks:asc`.\n  - `shared/lib/scroll-restoration` — новый слайс: ключ записи прокрутки с префиксом документа, чтобы после перезагрузки позиция не восстанавливалась.\n- **Тесты.** Unit — `search.test.ts`, `searchParams.test.ts`, `storage.test.ts`. Интеграционные — `ClientsTable.test.tsx`. E2E — `e2e/clients.spec.ts`. Тесты написаны без запуска.\n\nДопущения, которые меняют поведение, и их полный список в `PLAN.md`:\n- **Счётчик в заголовке.** Он внутри `h2`, а доступное имя заголовка задано через `aria-label=\"Мои клиенты\"`.\n- **Кнопка «Сбросить фильтры».** В состоянии «Ничего не найдено» остаётся только кнопка внутри самого состояния, кнопка панели скрыта.\n- **Предзагрузка в `loader`.** Она не блокирует переход, чтобы успевал показываться скелетон.\n- **Высота контейнера в jsdom.** Если у контейнера нет раскладки, виртуализатор берёт запасную высоту в 12 строк, иначе в jsdom не отрисуется ни одно",
+  "acceptanceHistory": [
+    {
+      "at": "2026-10-23T09:30:58.464Z",
+      "summary": {
+        "passed": 15,
+        "failed": 0,
+        "total": 15
+      },
+      "criteria": {
+        "AC-01": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-02": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-03": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-04": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-05": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-06": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-07": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-08": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-09": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-10": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-11": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-12": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-13": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-14": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-15": {
+          "status": "passed",
+          "reason": null
+        }
+      },
+      "replacedBecause": "AC-01 после круга 1: скелетон считается по строкам таблицы без columnheader, а не по строкам с ячейками (спека, п. 7, ячеек не требует)"
+    },
+    {
+      "at": "2026-10-23T10:19:26.617Z",
+      "summary": {
+        "passed": 15,
+        "failed": 0,
+        "total": 15
+      },
+      "criteria": {
+        "AC-01": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-02": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-03": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-04": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-05": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-06": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-07": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-08": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-09": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-10": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-11": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-12": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-13": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-14": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-15": {
+          "status": "passed",
+          "reason": null
+        }
+      },
+      "replacedBecause": "AC-15 считает уникальные успешные запросы; оценка по большинству из 3 повторов приёмки"
+    },
+    {
+      "at": "2026-10-23T12:08:45.931Z",
+      "rule": "критерий засчитан, если прошёл в большинстве из 3 повторов приёмки",
+      "summary": {
+        "passed": 15,
+        "failed": 0,
+        "total": 15
+      },
+      "flaky": [
+        "AC-10"
+      ],
+      "criteria": {
+        "AC-01": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-02": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-03": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-04": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-05": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-06": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-07": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-08": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-09": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-10": {
+          "status": "passed",
+          "passes": 2,
+          "repeats": 3,
+          "reason": "AC-10 фильтры и сортировка отражаются в адресной строке, сортировка по умолчанию не пишется: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-11": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-12": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-13": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-14": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-15": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        }
+      },
+      "replacedBecause": "Правка 6: помощник выбора статуса ждёт отрисовки пункта списка до 5 с, прежде чем перейти к вводу"
+    }
+  ],
+  "acceptanceRescoredAt": "2026-10-26T07:47:36.920Z"
+}

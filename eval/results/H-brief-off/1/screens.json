@@ -1,0 +1,22 @@
+[
+  {
+    "name": "01-default",
+    "ok": true,
+    "error": null
+  },
+  {
+    "name": "02-filtered",
+    "ok": true,
+    "error": null
+  },
+  {
+    "name": "03-after-back",
+    "ok": false,
+    "error": "\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed"
+  },
+  {
+    "name": "04-nothing-found",
+    "ok": true,
+    "error": null
+  }
+]

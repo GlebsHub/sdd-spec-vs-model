@@ -1,0 +1,1450 @@
+diff --git a/PLAN.md b/PLAN.md
+new file mode 100644
+index 0000000..a233b3a
+--- /dev/null
++++ b/PLAN.md
+@@ -0,0 +1,82 @@
++# План: раздел «Мои клиенты»
++
++## 1. Файлы и слои
++
++Слои снизу вверх. Защищённые файлы (`src/shared/api/clients/**`, `http.ts`, `errors.ts`, `shared/lib/money/**`, `shared/lib/session/**`, `src/mocks/**`, `src/test/**`, `src/main.tsx`) не меняются. Новые файлы создаются в `src/` и `e2e/`.
++
++| Слой | Файлы | Назначение |
++|---|---|---|
++| `shared/api` | — | Используются готовые `ClientListResponseSchema`, `ClientSchema`, `clientKeys`, `http.get`, `isHttpError`, `createQueryClient` |
++| `entities/clients` | `params.ts` | Zod-схема `validateSearch` (строки URL → нормализованный поиск), `toListParams` (поиск → параметры API), `nextSort` (цикл сортировки). Чистые функции |
++| | `api.ts` | `fetchClientsPage(params, cursor, signal)`: `http.get` со схемой `ClientListResponseSchema` |
++| | `queries.ts` | `clientQueries.list(params)` — `infiniteQueryOptions`, `staleTime: 60_000`, `getNextPageParam: nextCursor ?? undefined`, `placeholderData: keepPreviousData` в хуке |
++| | `useClients.ts` | Хук чтения: возвращает `clients`, `total`, `isPending`, `isError`, `hasNextPage`, `isFetchingNextPage`, `isFetchNextPageError`, `fetchNextPage`, `refetch`, `isPlaceholderData` |
++| | `index.ts` | Публичный API |
++| `features/client-columns` | `columns.ts` | `CLIENT_COLUMN` (id колонок), подписи, `HIDEABLE_COLUMNS`, значения по умолчанию |
++| | `columnsStorage.ts` | Zod-схема `localStorage` и чтение/запись по ключу `agent-cabinet:clients-columns:v1:<agentId>` |
++| | `useColumnVisibility.ts` | Состояние видимости (TanStack `columnVisibility`) синхронизированное с `localStorage`, сброс «По умолчанию» |
++| | `ColumnSettingsButton.tsx` | Кнопка «Настроить колонки» (`Popover` + `Checkbox`), «ФИО» нельзя снять |
++| `features/client-filters` | `useClientsSearchState.ts` | Единственный доступ к URL-состоянию списка: `search`, `updateSearch(patch, opts)`, `resetFilters`, `hasFilters`. Использует `getRouteApi("/clients")` |
++| | `ClientFilters.tsx` | Поле поиска (debounce 300 мс локально), `Select` статусов, `DatePicker.RangePicker`, кнопка «Сбросить фильтры» |
++| `widgets/clients-table` | `columns.tsx` | Определения колонок TanStack Table, рендер ячеек, тег статуса, `formatMoney`, `dayjs` для даты |
++| | `ClientsTable.tsx` | Заголовок со счётчиком, панель фильтров, «Настроить колонки», таблица, виртуализация, все состояния, догрузка |
++| | `index.ts` | Экспорт `ClientsTable`, `CLIENTS_SCROLL_ID` |
++| `pages/clients` | `ClientsPage.tsx` | Тонкая обёртка: рендерит `ClientsTable` |
++| `app` | `router.tsx` (меняется) | `validateSearch` на маршруте `/clients`, `scrollRestoration: true`, `getScrollRestorationKey` с префиксом на загрузку модуля, `scrollToTopSelectors: [data-scroll-restoration-id="…"]` |
++| | `styles.css`/CSS Modules | Стили таблицы через CSS Modules в `widgets/clients-table` |
++
++Конвенции: компоненты не вызывают HTTP напрямую, только хуки `entities/clients`. Ключи запросов — только через `clientKeys` из `shared/api`.
++
++## 2. Где хранится состояние
++
++| Состояние | Где | Детали |
++|---|---|---|
++| Данные списка | TanStack Query | Ключ `clientKeys.list(params)`, где `params` = `{ q, status, dateFrom, dateTo, sort }` без курсора и без номера страницы |
++| Поиск, статус, период, сортировка | URL (`/clients?q&status&from&to&sort`) | Значения по умолчанию не пишутся (`sort` без параметра = `registeredAt:desc`). Строки в URL, без JSON-сериализации |
++| Ввод в поле поиска до debounce | `useState` в `ClientFilters` | Debounce 300 мс, затем `navigate({ replace: true })` |
++| Видимость колонок | `localStorage` по `agentId` | Версия в ключе; невалидные данные и неизвестные колонки → значения по умолчанию; ошибки доступа глушатся |
++| Позиция прокрутки | Scroll restoration роутера | `useElementScrollRestoration({ id: CLIENTS_SCROLL_ID })` → `initialOffset` виртуализатора |
++| Текущий агент | `useCurrentAgent()` (session) | Только чтение, для ключа `localStorage` |
++| Zustand | Не используется | Нет общего состояния несвязанных компонентов |
++
++## 3. Требования → план → тесты
++
++| Требование | Что закрывает | Тест |
++|---|---|---|
++| AC-01 скелетон, первые 50, сортировка по дате убыв., счётчик | `useClients` (limit 50, `registeredAt:desc` по умолчанию), `ClientsTable` skeleton, счётчик `total` | Integration: «первая порция — скелетон, затем 50 строк и счётчик»; unit: `toListParams` без `sort` |
++| AC-02 колонки, порядок, форматы, видимость по умолчанию | `columns.ts`, `columns.tsx` (фиксированный порядок, `Продуктов` скрыта) | Integration: порядок заголовков, «Продуктов» отсутствует по умолчанию |
++| AC-03 комиссия 0 и 5 копеек | `formatMoney` в `commissionKopecks` | Integration: строки с `0,00 ₽` и `0,05 ₽` (фикстуры `db.ts`) |
++| AC-04 поиск debounce 300 мс, от 2 символов | `ClientFilters` debounce, `toListParams` (q < 2 не передаётся) | Integration: посимвольный ввод «Иванов» → один запрос `q=Иванов` в `getRequestLog`; unit: q из 1 символа не в запросе |
++| AC-05 статус и период, кнопка сброса | `ClientFilters`, `useClientsSearchState.hasFilters`, `resetFilters` (сохраняет `sort`) | Integration: фильтр статуса в запросе; «Сбросить» не видна без фильтров; сброс не трогает сортировку |
++| AC-06 смена фильтра/сортировки → первая порция, прокрутка к началу | Ключ с параметрами, `scrollToTopSelectors` | Integration: новый запрос без cursor; E2E: прокрутка в начало |
++| AC-07 сортировка п. 6, иконка и `aria-sort` | `nextSort`, `columns.tsx` | Unit: цикл `desc→asc→desc`, новая колонка → `desc`; integration: `aria-sort` |
++| AC-08 догрузка по концу, стоп при `nextCursor = null` | `useClients`, эффект на `virtualizer.range.endIndex`, условие `hasNextPage && !isFetchingNextPage && !isFetchNextPageError` | E2E: прокрутка догружает; integration: при `nextCursor = null` запросов больше нет |
++| AC-09 состояния п. 7 | `ClientsTable` (все состояния), `isFetchNextPageError` сохраняет строки | Integration: пусто без фильтров, пусто с фильтрами, ошибка первой порции + повтор, ошибка догрузки сохраняет строки, 403 |
++| AC-10 URL, открытие по ссылке, некорректные значения | `validateSearch` (`params.ts`), `toListParams` | Unit: мусор в `status`, `from`, `sort` → по умолчанию; integration: открытие `?status=LEAD` |
++| AC-11 назад: фильтры, сортировка, строки из кэша ≤ 60 с, прокрутка | `staleTime: 60_000`, scroll restoration, `initialOffset` | E2E: переход в карточку и «назад» |
++| AC-12 перезагрузка: фильтры и сортировка | URL + уникальный ключ скролла на документ | E2E: reload; прокрутка после reload не восстанавливается |
++| AC-13 колонки в `localStorage` по агенту, ФИО нельзя скрыть, «По умолчанию» | `useColumnVisibility`, `columnsStorage.ts` | Unit: чтение/запись/невалидные данные; integration: скрытие переживает перемонтирование, у другого агента — по умолчанию |
++| AC-14 клавиатура, подписи полей, статус текстом | `Enter` на строке, `aria-label` у полей, `Tag` с текстом | Integration: `Enter` открывает карточку; `getByRole('combobox', {name: 'Статус'})` и т. п. |
++| AC-15 не более 60 строк в DOM при 10 000 строк | `useVirtualizer` с `overscan: 10`, фикс. высота строки | E2E: после прокрутки по всему списку ≤ 60 `tr` в таблице |
++
++## 4. Вопросы к спеке и допущения
++
++1. **Q:** Что хранить в URL для `q` из 1 символа или с пробелами по краям? **Допущение:** в URL пишется `trim()`-версия; в API `q` уходит только при длине ≥ 2 (п. 5).
++2. **Q:** Что делать, если `from` > `to`? **Допущение:** не валидируем, бэкенд вернёт `total = 0`, показываем «Ничего не найдено».
++3. **Q:** Как показывать 403 при догрузке? Спека описывает 403 только для первой порции. **Допущение:** 403 при догрузке — обычная ошибка догрузки с «Повторить».
++4. **Q:** Некорректные значения в `status` (часть корректна)? **Допущение:** оставляем корректные значения, некорректные отбрасываем; если не осталось ни одного — параметр не применяется.
++5. **Q:** Формат счётчика в заголовке. **Допущение:** число с разделителем разрядов (неразрывный пробел), как в денежных суммах; отдельным элементом, чтобы accessible name заголовка был ровно «Мои клиенты».
++6. **Q:** Скелетон на «10 строк». **Допущение:** 10 строк скелетона внутри таблицы, без отдельного блока.
++7. **Q:** Что значит «Не удалось загрузить клиентов» при догрузке, если сработал повтор? **Допущение:** «Повторить» вызывает только `fetchNextPage`.
++8. **Конфликт (конвенции п. 3 vs. структура `shared/api`):** Zod-схема параметров списка по конвенции лежит в `schema.ts` сущности, но `shared/api/clients/**` защищён. **Решение:** схема URL и маппинг параметров в `entities/clients/params.ts`; схема ответа — готовая из `shared/api`. Расхождение записано здесь.
++9. **Дата в таблице:** `dayjs` в локальном часовом поясе браузера (`timezoneId: Europe/Moscow` в Playwright). Фильтр по дате на бэкенде — календарные даты из URL без пересчёта (п. 5 спеки).
++
++## 5. Порядок работы
++
++1. `entities/clients` (params, api, queries, useClients) + unit-тесты `params.ts`.
++2. `features/client-columns` + unit-тесты хранилища.
++3. `features/client-filters` (URL-хук, фильтры).
++4. `widgets/clients-table` (колонки, таблица, состояния, виртуализация) + интеграционные тесты.
++5. `pages/clients`, `router.tsx` (validateSearch, scroll restoration).
++6. E2E (`e2e/clients.spec.ts`).
++7. `npm run check` (typecheck, lint, test), затем e2e.
+diff --git a/e2e/clients.spec.ts b/e2e/clients.spec.ts
+new file mode 100644
+index 0000000..3841d96
+--- /dev/null
++++ b/e2e/clients.spec.ts
+@@ -0,0 +1,44 @@
++import { expect, test } from "@playwright/test";
++
++const SCROLLER = '[data-scroll-restoration-id="clients-table"]';
++
++test("ссылка с параметрами открывает то же состояние", async ({ page }) => {
++  await page.goto("/clients?status=LEAD&sort=commissionKopecks:asc");
++  await expect(page.getByRole("columnheader", { name: /Комиссия/ })).toHaveAttribute("aria-sort", "ascending");
++  await expect(page.getByRole("button", { name: "Сбросить фильтры" })).toBeVisible();
++});
++
++test("после перезагрузки восстанавливаются фильтры", async ({ page }) => {
++  await page.goto("/clients?q=Иванов");
++  await page.reload();
++  await expect(page.getByLabel("Поиск по ФИО")).toHaveValue("Иванов");
++});
++
++test("прокрутка догружает страницы и держит в DOM не более 60 строк", async ({ page }) => {
++  await page.goto("/clients");
++  const table = page.getByRole("table", { name: "Список клиентов" });
++  await expect(table.getByRole("row").nth(1)).toBeVisible();
++  for (let step = 0; step < 40; step += 1) {
++    await page.locator(SCROLLER).evaluate((element) => {
++      element.scrollTop += 2000;
++    });
++  }
++  await expect.poll(async () => table.getByRole("row").count()).toBeGreaterThan(60);
++  expect(await table.getByRole("row").count()).toBeLessThanOrEqual(61);
++});
++
++test("переход в карточку и «назад» восстанавливает фильтры, строки и прокрутку", async ({ page }) => {
++  await page.goto("/clients?status=LEAD");
++  const table = page.getByRole("table", { name: "Список клиентов" });
++  await expect(table.getByRole("row").nth(1)).toBeVisible();
++  await page.locator(SCROLLER).evaluate((element) => {
++    element.scrollTop = 48 * 30;
++  });
++  const scrollBefore = await page.locator(SCROLLER).evaluate((element) => element.scrollTop);
++  await table.getByRole("row").nth(3).click();
++  await expect(page.getByRole("heading", { name: "Карточка клиента" })).toBeVisible();
++  await page.getByRole("button", { name: "Назад" }).click();
++  await expect(page).toHaveURL(/status=LEAD/);
++  await expect(table.getByRole("row").nth(1)).toBeVisible();
++  await expect.poll(async () => page.locator(SCROLLER).evaluate((element) => element.scrollTop)).toBeGreaterThan(scrollBefore - 100);
++});
+diff --git a/src/app/router.tsx b/src/app/router.tsx
+index 6ab49f0..dca0437 100644
+--- a/src/app/router.tsx
++++ b/src/app/router.tsx
+@@ -7,15 +7,20 @@ import {
+   redirect,
+ } from "@tanstack/react-router";
+ import type { RouterHistory } from "@tanstack/react-router";
++import { validateClientsSearch } from "@/entities/clients";
+ import { ClientCardPage } from "@/pages/client-card";
+ import { ClientsPage } from "@/pages/clients";
+ import { NotFoundPage } from "@/pages/not-found";
++import { CLIENTS_SCROLL_ID } from "@/widgets/clients-table";
+ import { Layout } from "./Layout/Layout";
+ 
+ export type RouterContext = {
+   queryClient: QueryClient;
+ };
+ 
++/** Уникален для каждой загрузки документа: после перезагрузки позиции прокрутки не восстанавливаются. */
++const DOCUMENT_SCROLL_KEY = crypto.randomUUID();
++
+ const rootRoute = createRootRouteWithContext<RouterContext>()({
+   component: Layout,
+   notFoundComponent: NotFoundPage,
+@@ -33,6 +38,7 @@ const indexRoute = createRoute({
+ const clientsRoute = createRoute({
+   getParentRoute: () => rootRoute,
+   path: "/clients",
++  validateSearch: validateClientsSearch,
+   component: ClientsPage,
+ });
+ 
+@@ -54,6 +60,9 @@ export const createAppRouter = ({ queryClient, history = createBrowserHistory()
+     routeTree,
+     history,
+     context: { queryClient },
++    scrollRestoration: true,
++    getScrollRestorationKey: (location) => `${DOCUMENT_SCROLL_KEY}:${location.state.__TSR_key ?? location.href}`,
++    scrollToTopSelectors: [`[data-scroll-restoration-id="${CLIENTS_SCROLL_ID}"]`],
+   });
+ 
+ export type AppRouter = ReturnType<typeof createAppRouter>;
+diff --git a/src/entities/clients/api.ts b/src/entities/clients/api.ts
+new file mode 100644
+index 0000000..2aec47d
+--- /dev/null
++++ b/src/entities/clients/api.ts
+@@ -0,0 +1,27 @@
++import { ClientListResponseSchema, http } from "@/shared/api";
++import type { ClientListResponse } from "@/shared/api";
++import { toSortParam } from "./params";
++import type { ClientListParams } from "./params";
++
++export const CLIENTS_PAGE_SIZE = 50;
++
++const CLIENTS_PATH = "/agent/clients";
++
++export const fetchClientsPage = (
++  params: ClientListParams,
++  cursor: string | undefined,
++  signal?: AbortSignal,
++): Promise<ClientListResponse> =>
++  http.get(CLIENTS_PATH, {
++    schema: ClientListResponseSchema,
++    signal,
++    params: {
++      limit: CLIENTS_PAGE_SIZE,
++      cursor,
++      q: params.q,
++      status: params.status?.join(","),
++      dateFrom: params.dateFrom,
++      dateTo: params.dateTo,
++      sort: toSortParam(params.sort),
++    },
++  });
+diff --git a/src/entities/clients/index.ts b/src/entities/clients/index.ts
+new file mode 100644
+index 0000000..cd5c016
+--- /dev/null
++++ b/src/entities/clients/index.ts
+@@ -0,0 +1,16 @@
++export { CLIENTS_PAGE_SIZE } from "./api";
++export { CLIENTS_STALE_TIME, clientQueries } from "./queries";
++export { useClients } from "./useClients";
++export { CLIENT_STATUS_LABEL } from "./status";
++export {
++  DEFAULT_CLIENT_SORT,
++  getClientSort,
++  nextSort,
++  parseStatuses,
++  toClientListParams,
++  toSortParam,
++  toSortSearch,
++  toStatusParam,
++  validateClientsSearch,
++} from "./params";
++export type { ClientListParams, ClientSort, ClientsSearch } from "./params";
+diff --git a/src/entities/clients/params.test.ts b/src/entities/clients/params.test.ts
+new file mode 100644
+index 0000000..0da5fa7
+--- /dev/null
++++ b/src/entities/clients/params.test.ts
+@@ -0,0 +1,89 @@
++import { describe, expect, it } from "vitest";
++import { CLIENT_SORT_FIELD, SORT_DIRECTION } from "@/shared/api";
++import { nextSort, toClientListParams, validateClientsSearch } from "./params";
++
++describe("validateClientsSearch", () => {
++  it("пустой адрес даёт пустой поиск", () => {
++    expect(validateClientsSearch({})).toEqual({});
++  });
++
++  it("сортировка по умолчанию не попадает в адрес", () => {
++    expect(validateClientsSearch({ sort: "registeredAt:desc" })).toEqual({});
++  });
++
++  it("сохраняет корректные значения как есть", () => {
++    expect(
++      validateClientsSearch({ q: "Иванов", status: "LEAD,FUNDED", from: "2026-01-01", to: "2026-03-31", sort: "commissionKopecks:asc" }),
++    ).toEqual({ q: "Иванов", status: "LEAD,FUNDED", from: "2026-01-01", to: "2026-03-31", sort: "commissionKopecks:asc" });
++  });
++
++  it("обрезает пробелы в поиске и отбрасывает пустой поиск", () => {
++    expect(validateClientsSearch({ q: "  Иванов " }).q).toBe("Иванов");
++    expect(validateClientsSearch({ q: "   " }).q).toBeUndefined();
++  });
++
++  it("отбрасывает неизвестные статусы и дубликаты, сохраняя корректные", () => {
++    expect(validateClientsSearch({ status: "LEAD,UNKNOWN,LEAD" }).status).toBe("LEAD");
++    expect(validateClientsSearch({ status: "BOGUS" }).status).toBeUndefined();
++  });
++
++  it("отбрасывает даты, которых не существует или в другом формате", () => {
++    expect(validateClientsSearch({ from: "2026-02-30" }).from).toBeUndefined();
++    expect(validateClientsSearch({ to: "01.02.2026" }).to).toBeUndefined();
++  });
++
++  it("отбрасывает некорректную сортировку", () => {
++    expect(validateClientsSearch({ sort: "phoneMasked:asc" }).sort).toBeUndefined();
++    expect(validateClientsSearch({ sort: "fullName:up" }).sort).toBeUndefined();
++    expect(validateClientsSearch({ sort: "fullName:asc:extra" }).sort).toBeUndefined();
++  });
++
++  it("не падает на мусоре во входе", () => {
++    expect(validateClientsSearch(null)).toEqual({});
++    expect(validateClientsSearch("garbage")).toEqual({});
++  });
++
++  it("число в параметре трактуется как строка", () => {
++    expect(validateClientsSearch({ q: 2026 }).q).toBe("2026");
++  });
++});
++
++describe("toClientListParams", () => {
++  it("поиск короче двух символов в запрос не попадает", () => {
++    expect(toClientListParams({ q: "И" }).q).toBeUndefined();
++    expect(toClientListParams({ q: "Ив" }).q).toBe("Ив");
++  });
++
++  it("статусы превращаются в массив, сортировка по умолчанию", () => {
++    expect(toClientListParams({ status: "LEAD,FUNDED" })).toEqual({
++      q: undefined,
++      status: ["LEAD", "FUNDED"],
++      dateFrom: undefined,
++      dateTo: undefined,
++      sort: { field: CLIENT_SORT_FIELD.registeredAt, direction: SORT_DIRECTION.desc },
++    });
++  });
++
++  it("даты передаются как есть, без пересчёта часового пояса", () => {
++    const params = toClientListParams({ from: "2026-01-01", to: "2026-03-31" });
++    expect(params.dateFrom).toBe("2026-01-01");
++    expect(params.dateTo).toBe("2026-03-31");
++  });
++});
++
++describe("nextSort", () => {
++  const registered = { field: CLIENT_SORT_FIELD.registeredAt, direction: SORT_DIRECTION.desc };
++
++  it("новая колонка сортируется по убыванию", () => {
++    expect(nextSort(registered, CLIENT_SORT_FIELD.commissionKopecks)).toEqual({
++      field: CLIENT_SORT_FIELD.commissionKopecks,
++      direction: SORT_DIRECTION.desc,
++    });
++  });
++
++  it("цикл на той же колонке: desc → asc → desc", () => {
++    const asc = nextSort(registered, CLIENT_SORT_FIELD.registeredAt);
++    expect(asc.direction).toBe(SORT_DIRECTION.asc);
++    expect(nextSort(asc, CLIENT_SORT_FIELD.registeredAt).direction).toBe(SORT_DIRECTION.desc);
++  });
++});
+diff --git a/src/entities/clients/params.ts b/src/entities/clients/params.ts
+new file mode 100644
+index 0000000..7cab134
+--- /dev/null
++++ b/src/entities/clients/params.ts
+@@ -0,0 +1,122 @@
++import { z } from "zod";
++import { CLIENT_SORT_FIELD, CLIENT_STATUS, SORT_DIRECTION } from "@/shared/api";
++import type { ClientSortField, ClientStatus, SortDirection } from "@/shared/api";
++
++export const MIN_QUERY_LENGTH = 2;
++
++export type ClientSort = { field: ClientSortField; direction: SortDirection };
++
++export const DEFAULT_CLIENT_SORT: ClientSort = { field: CLIENT_SORT_FIELD.registeredAt, direction: SORT_DIRECTION.desc };
++
++/** Поиск в адресной строке: все значения — строки в том виде, в каком они хранятся в URL. */
++export type ClientsSearch = {
++  q?: string;
++  status?: string;
++  from?: string;
++  to?: string;
++  sort?: string;
++};
++
++export type ClientListParams = {
++  q: string | undefined;
++  status: ClientStatus[] | undefined;
++  dateFrom: string | undefined;
++  dateTo: string | undefined;
++  sort: ClientSort;
++};
++
++const TextParam = z
++  .preprocess((value) => (typeof value === "number" ? String(value) : value), z.string())
++  .optional()
++  .catch(undefined);
++
++const RawSearchSchema = z
++  .object({
++    q: TextParam,
++    status: TextParam,
++    from: TextParam,
++    to: TextParam,
++    sort: TextParam,
++  })
++  .catch({});
++
++const isStatus = (value: string): value is ClientStatus => Object.hasOwn(CLIENT_STATUS, value);
++const isSortField = (value: string): value is ClientSortField => Object.hasOwn(CLIENT_SORT_FIELD, value);
++const isDirection = (value: string): value is SortDirection => Object.hasOwn(SORT_DIRECTION, value);
++
++const isCalendarDate = (value: string): boolean => {
++  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
++  if (!match) {
++    return false;
++  }
++  const date = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
++  return date.toISOString().slice(0, 10) === value;
++};
++
++const isDefaultSort = (sort: ClientSort): boolean =>
++  sort.field === DEFAULT_CLIENT_SORT.field && sort.direction === DEFAULT_CLIENT_SORT.direction;
++
++export const parseStatuses = (raw: string): ClientStatus[] => {
++  const statuses = raw.split(",").map((part) => part.trim()).filter(isStatus);
++  return [...new Set(statuses)];
++};
++
++export const toStatusParam = (statuses: ClientStatus[]): string | undefined =>
++  statuses.length > 0 ? statuses.join(",") : undefined;
++
++const parseSort = (raw: string): ClientSort | undefined => {
++  const [field = "", direction = "", ...extra] = raw.split(":");
++  if (extra.length > 0 || !isSortField(field) || !isDirection(direction)) {
++    return undefined;
++  }
++  return { field, direction };
++};
++
++/**
++ * Приводит параметры адресной строки к каноническому виду. Некорректные значения отбрасываются,
++ * значения по умолчанию не пишутся.
++ */
++export const validateClientsSearch = (raw: unknown): ClientsSearch => {
++  const { q, status, from, to, sort } = RawSearchSchema.parse(raw);
++
++  const trimmedQ = q?.trim();
++  const statuses = status === undefined ? [] : parseStatuses(status);
++  const parsedSort = sort === undefined ? undefined : parseSort(sort);
++
++  return {
++    q: trimmedQ ? trimmedQ : undefined,
++    status: toStatusParam(statuses),
++    from: from !== undefined && isCalendarDate(from) ? from : undefined,
++    to: to !== undefined && isCalendarDate(to) ? to : undefined,
++    sort: parsedSort === undefined ? undefined : toSortSearch(parsedSort),
++  };
++};
++
++export const toSortParam = (sort: ClientSort): string => `${sort.field}:${sort.direction}`;
++
++/** Значение `sort` для адреса: сортировка по умолчанию адрес не меняет. */
++export const toSortSearch = (sort: ClientSort): string | undefined =>
++  isDefaultSort(sort) ? undefined : toSortParam(sort);
++
++export const getClientSort = (search: ClientsSearch): ClientSort =>
++  (search.sort === undefined ? undefined : parseSort(search.sort)) ?? DEFAULT_CLIENT_SORT;
++
++/** Параметры запроса списка. Поиск короче MIN_QUERY_LENGTH в API не передаётся. */
++export const toClientListParams = (search: ClientsSearch): ClientListParams => {
++  const q = search.q !== undefined && search.q.length >= MIN_QUERY_LENGTH ? search.q : undefined;
++  return {
++    q,
++    status: search.status === undefined ? undefined : parseStatuses(search.status),
++    dateFrom: search.from,
++    dateTo: search.to,
++    sort: getClientSort(search),
++  };
++};
++
++/** Цикл п. 6: новая колонка → desc, desc → asc, asc → desc. */
++export const nextSort = (current: ClientSort, field: ClientSortField): ClientSort => {
++  if (current.field !== field) {
++    return { field, direction: SORT_DIRECTION.desc };
++  }
++  return { field, direction: current.direction === SORT_DIRECTION.desc ? SORT_DIRECTION.asc : SORT_DIRECTION.desc };
++};
+diff --git a/src/entities/clients/queries.ts b/src/entities/clients/queries.ts
+new file mode 100644
+index 0000000..6a71afb
+--- /dev/null
++++ b/src/entities/clients/queries.ts
+@@ -0,0 +1,20 @@
++import { infiniteQueryOptions } from "@tanstack/react-query";
++import { clientKeys } from "@/shared/api";
++import { fetchClientsPage } from "./api";
++import type { ClientListParams } from "./params";
++
++/** Данные считаются свежими 60 секунд: при возврате на список в этот срок запрос не уходит (п. 9.2). */
++export const CLIENTS_STALE_TIME = 60 * 1000;
++
++const FIRST_PAGE_CURSOR: string | undefined = undefined;
++
++export const clientQueries = {
++  list: (params: ClientListParams) =>
++    infiniteQueryOptions({
++      queryKey: clientKeys.list(params),
++      queryFn: ({ pageParam, signal }) => fetchClientsPage(params, pageParam, signal),
++      initialPageParam: FIRST_PAGE_CURSOR,
++      getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
++      staleTime: CLIENTS_STALE_TIME,
++    }),
++};
+diff --git a/src/entities/clients/status.ts b/src/entities/clients/status.ts
+new file mode 100644
+index 0000000..f4f8b6f
+--- /dev/null
++++ b/src/entities/clients/status.ts
+@@ -0,0 +1,10 @@
++import { CLIENT_STATUS } from "@/shared/api";
++import type { ClientStatus } from "@/shared/api";
++
++/** Тексты статусов (спецификация, п. 4.2). Цвет тега задаётся отдельно, текст — всегда. */
++export const CLIENT_STATUS_LABEL: Record<ClientStatus, string> = {
++  [CLIENT_STATUS.LEAD]: "Зарегистрирован",
++  [CLIENT_STATUS.ACCOUNT_OPENED]: "Открыл счёт",
++  [CLIENT_STATUS.FUNDED]: "Пополнил счёт",
++  [CLIENT_STATUS.INACTIVE]: "Неактивен",
++};
+diff --git a/src/entities/clients/useClients.ts b/src/entities/clients/useClients.ts
+new file mode 100644
+index 0000000..0aee09c
+--- /dev/null
++++ b/src/entities/clients/useClients.ts
+@@ -0,0 +1,34 @@
++import { useCallback } from "react";
++import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
++import { clientQueries } from "./queries";
++import type { ClientListParams } from "./params";
++
++export const useClients = (params: ClientListParams) => {
++  const query = useInfiniteQuery({
++    ...clientQueries.list(params),
++    placeholderData: keepPreviousData,
++  });
++  const { fetchNextPage, refetch } = query;
++  const pages = query.data?.pages ?? [];
++
++  const loadNextPage = useCallback((): void => {
++    void fetchNextPage();
++  }, [fetchNextPage]);
++
++  const reload = useCallback((): void => {
++    void refetch();
++  }, [refetch]);
++
++  return {
++    clients: pages.flatMap((page) => page.items),
++    total: pages[0]?.total,
++    isPending: query.isPending,
++    isError: query.isError,
++    error: query.error,
++    hasNextPage: query.hasNextPage,
++    isFetchingNextPage: query.isFetchingNextPage,
++    isFetchNextPageError: query.isFetchNextPageError,
++    fetchNextPage: loadNextPage,
++    refetch: reload,
++  };
++};
+diff --git a/src/features/client-columns/ColumnSettingsButton.tsx b/src/features/client-columns/ColumnSettingsButton.tsx
+new file mode 100644
+index 0000000..b022315
+--- /dev/null
++++ b/src/features/client-columns/ColumnSettingsButton.tsx
+@@ -0,0 +1,36 @@
++import { SettingOutlined } from "@ant-design/icons";
++import { Button, Checkbox, Flex, Popover } from "antd";
++import { CLIENT_COLUMN_FIXED, CLIENT_COLUMN_LABEL, CLIENT_COLUMN_ORDER } from "./columns";
++import type { ClientColumnId, ColumnVisibility } from "./columns";
++
++export type ColumnSettingsButtonProps = {
++  visibility: ColumnVisibility;
++  onVisibleChange: (id: ClientColumnId, visible: boolean) => void;
++  onReset: () => void;
++};
++
++export const ColumnSettingsButton = ({ visibility, onVisibleChange, onReset }: ColumnSettingsButtonProps) => {
++  const content = (
++    <Flex vertical gap="small">
++      {CLIENT_COLUMN_ORDER.map((id) => (
++        <Checkbox
++          key={id}
++          checked={visibility[id]}
++          disabled={id === CLIENT_COLUMN_FIXED}
++          onChange={(event) => {
++            onVisibleChange(id, event.target.checked);
++          }}
++        >
++          {CLIENT_COLUMN_LABEL[id]}
++        </Checkbox>
++      ))}
++      <Button onClick={onReset}>По умолчанию</Button>
++    </Flex>
++  );
++
++  return (
++    <Popover trigger="click" placement="bottomRight" title="Колонки" content={content}>
++      <Button icon={<SettingOutlined aria-hidden />}>Настроить колонки</Button>
++    </Popover>
++  );
++};
+diff --git a/src/features/client-columns/columns.ts b/src/features/client-columns/columns.ts
+new file mode 100644
+index 0000000..5820815
+--- /dev/null
++++ b/src/features/client-columns/columns.ts
+@@ -0,0 +1,43 @@
++export const CLIENT_COLUMN = {
++  fullName: "fullName",
++  phoneMasked: "phoneMasked",
++  status: "status",
++  registeredAt: "registeredAt",
++  commissionKopecks: "commissionKopecks",
++  productsCount: "productsCount",
++} as const;
++
++export type ClientColumnId = (typeof CLIENT_COLUMN)[keyof typeof CLIENT_COLUMN];
++
++/** Порядок колонок фиксированный (п. 4.1). */
++export const CLIENT_COLUMN_ORDER: readonly ClientColumnId[] = [
++  CLIENT_COLUMN.fullName,
++  CLIENT_COLUMN.phoneMasked,
++  CLIENT_COLUMN.status,
++  CLIENT_COLUMN.registeredAt,
++  CLIENT_COLUMN.commissionKopecks,
++  CLIENT_COLUMN.productsCount,
++];
++
++export const CLIENT_COLUMN_LABEL: Record<ClientColumnId, string> = {
++  [CLIENT_COLUMN.fullName]: "ФИО",
++  [CLIENT_COLUMN.phoneMasked]: "Телефон",
++  [CLIENT_COLUMN.status]: "Статус",
++  [CLIENT_COLUMN.registeredAt]: "Дата регистрации",
++  [CLIENT_COLUMN.commissionKopecks]: "Комиссия",
++  [CLIENT_COLUMN.productsCount]: "Продуктов",
++};
++
++/** «ФИО» нельзя скрыть. */
++export const CLIENT_COLUMN_FIXED: ClientColumnId = CLIENT_COLUMN.fullName;
++
++export type ColumnVisibility = Record<ClientColumnId, boolean>;
++
++export const defaultColumnVisibility = (): ColumnVisibility => ({
++  [CLIENT_COLUMN.fullName]: true,
++  [CLIENT_COLUMN.phoneMasked]: true,
++  [CLIENT_COLUMN.status]: true,
++  [CLIENT_COLUMN.registeredAt]: true,
++  [CLIENT_COLUMN.commissionKopecks]: true,
++  [CLIENT_COLUMN.productsCount]: false,
++});
+diff --git a/src/features/client-columns/columnsStorage.test.ts b/src/features/client-columns/columnsStorage.test.ts
+new file mode 100644
+index 0000000..fac880f
+--- /dev/null
++++ b/src/features/client-columns/columnsStorage.test.ts
+@@ -0,0 +1,44 @@
++import { beforeEach, describe, expect, it } from "vitest";
++import { CLIENT_COLUMN, defaultColumnVisibility } from "./columns";
++import { readColumnVisibility, writeColumnVisibility } from "./columnsStorage";
++
++const KEY = "agent-cabinet:clients-columns:v1:agent-1";
++
++describe("настройки колонок в localStorage", () => {
++  beforeEach(() => {
++    window.localStorage.clear();
++  });
++
++  it("без сохранённых данных возвращает значения по умолчанию", () => {
++    expect(readColumnVisibility("agent-1")).toEqual(defaultColumnVisibility());
++  });
++
++  it("записанные настройки читаются обратно", () => {
++    const visibility = { ...defaultColumnVisibility(), [CLIENT_COLUMN.phoneMasked]: false, [CLIENT_COLUMN.productsCount]: true };
++    writeColumnVisibility("agent-1", visibility);
++    expect(readColumnVisibility("agent-1")).toEqual(visibility);
++  });
++
++  it("настройки разделены по агентам", () => {
++    writeColumnVisibility("agent-1", { ...defaultColumnVisibility(), [CLIENT_COLUMN.phoneMasked]: false });
++    expect(readColumnVisibility("agent-2")).toEqual(defaultColumnVisibility());
++  });
++
++  it("«ФИО» не скрывается, даже если в хранилище записано false", () => {
++    window.localStorage.setItem(KEY, JSON.stringify({ columns: { fullName: false } }));
++    expect(readColumnVisibility("agent-1")[CLIENT_COLUMN.fullName]).toBe(true);
++  });
++
++  it("неизвестные колонки игнорируются", () => {
++    window.localStorage.setItem(KEY, JSON.stringify({ columns: { unknownColumn: false, phoneMasked: false } }));
++    expect(readColumnVisibility("agent-1")).toEqual({ ...defaultColumnVisibility(), [CLIENT_COLUMN.phoneMasked]: false });
++  });
++
++  it.each([
++    ["битый JSON", "{not json"],
++    ["неверная форма", JSON.stringify({ columns: "oops" })],
++  ])("при %s возвращает значения по умолчанию", (_, raw) => {
++    window.localStorage.setItem(KEY, raw);
++    expect(readColumnVisibility("agent-1")).toEqual(defaultColumnVisibility());
++  });
++});
+diff --git a/src/features/client-columns/columnsStorage.ts b/src/features/client-columns/columnsStorage.ts
+new file mode 100644
+index 0000000..2b56fdf
+--- /dev/null
++++ b/src/features/client-columns/columnsStorage.ts
+@@ -0,0 +1,47 @@
++import { z } from "zod";
++import { CLIENT_COLUMN_FIXED, CLIENT_COLUMN_ORDER, defaultColumnVisibility } from "./columns";
++import type { ClientColumnId, ColumnVisibility } from "./columns";
++
++const STORAGE_PREFIX = "agent-cabinet:clients-columns:v1";
++
++const StoredSchema = z.object({ columns: z.record(z.string(), z.boolean()) });
++
++const storageKey = (agentId: string): string => `${STORAGE_PREFIX}:${agentId}`;
++
++/** Неизвестные и скрытые-нельзя колонки игнорируются, отсутствующие берутся по умолчанию. */
++export const readColumnVisibility = (agentId: string): ColumnVisibility => {
++  const defaults = defaultColumnVisibility();
++  try {
++    const raw = window.localStorage.getItem(storageKey(agentId));
++    if (raw === null) {
++      return defaults;
++    }
++    const parsed = StoredSchema.safeParse(JSON.parse(raw));
++    if (!parsed.success) {
++      return defaults;
++    }
++    const stored = parsed.data.columns;
++    const result = { ...defaults };
++    for (const id of CLIENT_COLUMN_ORDER) {
++      const value = stored[id];
++      if (id !== CLIENT_COLUMN_FIXED && typeof value === "boolean") {
++        result[id] = value;
++      }
++    }
++    return result;
++  } catch {
++    return defaults;
++  }
++};
++
++export const writeColumnVisibility = (agentId: string, visibility: ColumnVisibility): void => {
++  const columns: Partial<Record<ClientColumnId, boolean>> = {};
++  for (const id of CLIENT_COLUMN_ORDER) {
++    columns[id] = visibility[id];
++  }
++  try {
++    window.localStorage.setItem(storageKey(agentId), JSON.stringify({ columns }));
++  } catch {
++    return;
++  }
++};
+diff --git a/src/features/client-columns/index.ts b/src/features/client-columns/index.ts
+new file mode 100644
+index 0000000..14050e7
+--- /dev/null
++++ b/src/features/client-columns/index.ts
+@@ -0,0 +1,4 @@
++export { CLIENT_COLUMN, CLIENT_COLUMN_FIXED, CLIENT_COLUMN_LABEL, CLIENT_COLUMN_ORDER } from "./columns";
++export type { ClientColumnId, ColumnVisibility } from "./columns";
++export { useColumnVisibility } from "./useColumnVisibility";
++export { ColumnSettingsButton } from "./ColumnSettingsButton";
+diff --git a/src/features/client-columns/useColumnVisibility.ts b/src/features/client-columns/useColumnVisibility.ts
+new file mode 100644
+index 0000000..8230f00
+--- /dev/null
++++ b/src/features/client-columns/useColumnVisibility.ts
+@@ -0,0 +1,25 @@
++import { useState } from "react";
++import { useCurrentAgent } from "@/shared/lib/session";
++import { defaultColumnVisibility } from "./columns";
++import type { ClientColumnId, ColumnVisibility } from "./columns";
++import { readColumnVisibility, writeColumnVisibility } from "./columnsStorage";
++
++export const useColumnVisibility = () => {
++  const { id: agentId } = useCurrentAgent();
++  const [visibility, setVisibility] = useState<ColumnVisibility>(() => readColumnVisibility(agentId));
++
++  const commit = (next: ColumnVisibility): void => {
++    setVisibility(next);
++    writeColumnVisibility(agentId, next);
++  };
++
++  return {
++    visibility,
++    setColumnVisible: (id: ClientColumnId, visible: boolean): void => {
++      commit({ ...visibility, [id]: visible });
++    },
++    resetColumnVisibility: (): void => {
++      commit(defaultColumnVisibility());
++    },
++  };
++};
+diff --git a/src/features/client-filters/ClientFilters.tsx b/src/features/client-filters/ClientFilters.tsx
+new file mode 100644
+index 0000000..bd93e77
+--- /dev/null
++++ b/src/features/client-filters/ClientFilters.tsx
+@@ -0,0 +1,91 @@
++import { Button, DatePicker, Flex, Input, Select } from "antd";
++import dayjs from "dayjs";
++import { useEffect, useId, useState } from "react";
++import { CLIENT_STATUS_LABEL, parseStatuses, toStatusParam } from "@/entities/clients";
++import { CLIENT_STATUS } from "@/shared/api";
++import type { ClientStatus } from "@/shared/api";
++import { useClientsSearchState } from "./useClientsSearchState";
++
++const SEARCH_DEBOUNCE_MS = 300;
++const DATE_FORMAT = "YYYY-MM-DD";
++
++const STATUS_OPTIONS = Object.values(CLIENT_STATUS).map((status) => ({
++  value: status,
++  label: CLIENT_STATUS_LABEL[status],
++}));
++
++const toDayjs = (value: string | undefined) => (value === undefined ? null : dayjs(value));
++
++export const ClientFilters = () => {
++  const { search, updateSearch, resetFilters, hasFilters } = useClientsSearchState();
++  const searchId = useId();
++  const statusId = useId();
++  const periodId = useId();
++  const [searchText, setSearchText] = useState(search.q ?? "");
++  const statuses = search.status === undefined ? [] : parseStatuses(search.status);
++
++  useEffect(() => {
++    setSearchText(search.q ?? "");
++  }, [search.q]);
++
++  useEffect(() => {
++    const trimmed = searchText.trim();
++    if (trimmed === (search.q ?? "")) {
++      return;
++    }
++    const timer = window.setTimeout(() => {
++      updateSearch({ q: trimmed === "" ? undefined : trimmed }, { replace: true });
++    }, SEARCH_DEBOUNCE_MS);
++    return () => {
++      window.clearTimeout(timer);
++    };
++  }, [searchText, search.q, updateSearch]);
++
++  return (
++    <Flex wrap gap="large" align="flex-end">
++      <Flex vertical gap="small">
++        <label htmlFor={searchId}>Поиск по ФИО</label>
++        <Input
++          id={searchId}
++          allowClear
++          placeholder="Например, Иванов"
++          style={{ width: 280 }}
++          value={searchText}
++          onChange={(event) => {
++            setSearchText(event.target.value);
++          }}
++        />
++      </Flex>
++      <Flex vertical gap="small">
++        <label htmlFor={statusId}>Статус</label>
++        <Select<ClientStatus[]>
++          id={statusId}
++          mode="multiple"
++          allowClear
++          style={{ minWidth: 220 }}
++          options={STATUS_OPTIONS}
++          value={statuses}
++          onChange={(values) => {
++            updateSearch({ status: toStatusParam(values) });
++          }}
++        />
++      </Flex>
++      <Flex vertical gap="small" role="group" aria-labelledby={periodId}>
++        <span id={periodId}>Период регистрации</span>
++        <DatePicker.RangePicker
++          allowEmpty={[true, true]}
++          format="DD.MM.YYYY"
++          placeholder={["С", "По"]}
++          value={[toDayjs(search.from), toDayjs(search.to)]}
++          onChange={(dates) => {
++            updateSearch({
++              from: dates?.[0]?.format(DATE_FORMAT),
++              to: dates?.[1]?.format(DATE_FORMAT),
++            });
++          }}
++        />
++      </Flex>
++      {hasFilters && <Button onClick={resetFilters}>Сбросить фильтры</Button>}
++    </Flex>
++  );
++};
+diff --git a/src/features/client-filters/index.ts b/src/features/client-filters/index.ts
+new file mode 100644
+index 0000000..94fba38
+--- /dev/null
++++ b/src/features/client-filters/index.ts
+@@ -0,0 +1,2 @@
++export { ClientFilters } from "./ClientFilters";
++export { useClientsSearchState } from "./useClientsSearchState";
+diff --git a/src/features/client-filters/useClientsSearchState.ts b/src/features/client-filters/useClientsSearchState.ts
+new file mode 100644
+index 0000000..e4e80ec
+--- /dev/null
++++ b/src/features/client-filters/useClientsSearchState.ts
+@@ -0,0 +1,31 @@
++import { useCallback } from "react";
++import { getRouteApi } from "@tanstack/react-router";
++import type { ClientsSearch } from "@/entities/clients";
++
++const routeApi = getRouteApi("/clients");
++
++type UpdateOptions = { replace?: boolean };
++
++/** Единственный доступ к фильтрам и сортировке: они живут в адресной строке (п. 9.1). */
++export const useClientsSearchState = () => {
++  const search = routeApi.useSearch();
++  const navigate = routeApi.useNavigate();
++
++  const updateSearch = useCallback(
++    (patch: ClientsSearch, { replace = false }: UpdateOptions = {}) => {
++      void navigate({
++        search: (prev) => ({ ...prev, ...patch }),
++        replace,
++      });
++    },
++    [navigate],
++  );
++
++  const resetFilters = useCallback(() => {
++    updateSearch({ q: undefined, status: undefined, from: undefined, to: undefined });
++  }, [updateSearch]);
++
++  const hasFilters = Boolean(search.q || search.status || search.from || search.to);
++
++  return { search, updateSearch, resetFilters, hasFilters };
++};
+diff --git a/src/pages/clients/ClientsPage.tsx b/src/pages/clients/ClientsPage.tsx
+index 55ea58c..f239d15 100644
+--- a/src/pages/clients/ClientsPage.tsx
++++ b/src/pages/clients/ClientsPage.tsx
+@@ -1,7 +1,3 @@
+-import { Flex, Typography } from "antd";
++import { ClientsTable } from "@/widgets/clients-table";
+ 
+-export const ClientsPage = () => (
+-  <Flex vertical gap="middle">
+-    <Typography.Title level={2}>Мои клиенты</Typography.Title>
+-  </Flex>
+-);
++export const ClientsPage = () => <ClientsTable />;
+diff --git a/src/widgets/clients-table/ClientsTable.module.css b/src/widgets/clients-table/ClientsTable.module.css
+new file mode 100644
+index 0000000..f4599c7
+--- /dev/null
++++ b/src/widgets/clients-table/ClientsTable.module.css
+@@ -0,0 +1,54 @@
++.root {
++  flex: 1;
++  min-height: 0;
++  display: flex;
++  flex-direction: column;
++}
++
++.scroller {
++  flex: 1;
++  min-height: 0;
++  overflow: auto;
++}
++
++.table {
++  width: 100%;
++  border-collapse: separate;
++  border-spacing: 0;
++}
++
++.headerCell {
++  position: sticky;
++  top: 0;
++  z-index: 1;
++  text-align: left;
++  font-weight: 600;
++  white-space: nowrap;
++}
++
++.rightAligned {
++  text-align: right;
++}
++
++.cell {
++  white-space: nowrap;
++  overflow: hidden;
++  text-overflow: ellipsis;
++}
++
++.row {
++  cursor: pointer;
++}
++
++.sortButton {
++  all: unset;
++  display: inline-flex;
++  align-items: center;
++  gap: 4px;
++  cursor: pointer;
++}
++
++.sortButton:focus-visible {
++  outline: 2px solid currentColor;
++  outline-offset: 2px;
++}
+diff --git a/src/widgets/clients-table/ClientsTable.test.tsx b/src/widgets/clients-table/ClientsTable.test.tsx
+new file mode 100644
+index 0000000..1f518ce
+--- /dev/null
++++ b/src/widgets/clients-table/ClientsTable.test.tsx
+@@ -0,0 +1,137 @@
++import { fireEvent, screen, waitFor, within } from "@testing-library/react";
++import { beforeEach, describe, expect, it, vi } from "vitest";
++import { MOCK_SCENARIO, getRequestLog, setMockScenario } from "@/mocks";
++import { formatMoney } from "@/shared/lib/money";
++import { renderApp } from "@/test";
++
++const SCROLLER_SELECTOR = '[data-scroll-restoration-id="clients-table"]';
++
++const requestsWith = (key: string) => getRequestLog().filter((request) => request.params[key] !== undefined);
++
++beforeEach(() => {
++  // В jsdom нет раскладки: без размеров виртуализатор не отрисует ни одной строки.
++  vi.spyOn(HTMLElement.prototype, "offsetHeight", "get").mockReturnValue(800);
++  vi.spyOn(HTMLElement.prototype, "offsetWidth", "get").mockReturnValue(1200);
++});
++
++describe("раздел «Мои клиенты»", () => {
++  it("AC-01: первая порция 50 записей по дате регистрации по убыванию и счётчик", async () => {
++    await renderApp({ url: "/clients" });
++    const table = await screen.findByRole("table", { name: "Список клиентов" });
++    expect(within(table).getAllByRole("row").length).toBeGreaterThan(1);
++    expect(getRequestLog()[0]?.params).toMatchObject({ limit: "50", sort: "registeredAt:desc" });
++    expect(await screen.findByText(/^10\s000$/)).toBeInTheDocument();
++  });
++
++  it("AC-02: колонка «Продуктов» скрыта по умолчанию, «ФИО» первая", async () => {
++    await renderApp({ url: "/clients" });
++    await screen.findByRole("table", { name: "Список клиентов" });
++    const headers = screen.getAllByRole("columnheader").map((header) => header.textContent);
++    expect(headers[0]).toBe("ФИО");
++    expect(headers.some((text) => text?.includes("Продуктов"))).toBe(false);
++  });
++
++  it("AC-03: комиссия 0 и 5 копеек в денежном формате", async () => {
++    await renderApp({ url: "/clients" });
++    expect(await screen.findByText(formatMoney(0))).toBeInTheDocument();
++    expect(await screen.findByText(formatMoney(5))).toBeInTheDocument();
++  });
++
++  it("AC-04: посимвольный ввод «Иванов» отправляет один запрос с q=Иванов", async () => {
++    const { user } = await renderApp({ url: "/clients" });
++    await screen.findByRole("table", { name: "Список клиентов" });
++    await user.type(screen.getByLabelText("Поиск по ФИО"), "Иванов");
++    await waitFor(() => expect(requestsWith("q")).toHaveLength(1));
++    expect(requestsWith("q")[0]?.params.q).toBe("Иванов");
++  });
++
++  it("AC-05: фильтр статуса из адреса передаётся в запрос, кнопка сброса видна", async () => {
++    const { user } = await renderApp({ url: "/clients?status=LEAD" });
++    await screen.findByRole("table", { name: "Список клиентов" });
++    expect(getRequestLog()[0]?.params.status).toBe("LEAD");
++    await user.click(screen.getByRole("button", { name: "Сбросить фильтры" }));
++    await waitFor(() => expect(screen.queryByRole("button", { name: "Сбросить фильтры" })).not.toBeInTheDocument());
++  });
++
++  it("AC-07: сортировка переключается desc → asc и отражается в aria-sort", async () => {
++    const { user } = await renderApp({ url: "/clients" });
++    await screen.findByRole("table", { name: "Список клиентов" });
++    await user.click(screen.getByRole("button", { name: "Комиссия" }));
++    await waitFor(() => expect(requestsWith("sort").at(-1)?.params.sort).toBe("commissionKopecks:desc"));
++    await user.click(screen.getByRole("button", { name: "Комиссия" }));
++    await waitFor(() => expect(requestsWith("sort").at(-1)?.params.sort).toBe("commissionKopecks:asc"));
++    expect(screen.getByRole("columnheader", { name: /Комиссия/ })).toHaveAttribute("aria-sort", "ascending");
++  });
++
++  it("AC-09: пустой список без фильтров", async () => {
++    setMockScenario({ scenario: MOCK_SCENARIO.empty });
++    await renderApp({ url: "/clients" });
++    expect(
++      await screen.findByText("У вас пока нет клиентов. Поделитесь реферальной ссылкой, чтобы пригласить первого"),
++    ).toBeInTheDocument();
++  });
++
++  it("AC-09: пустой список с фильтрами и сброс", async () => {
++    setMockScenario({ scenario: MOCK_SCENARIO.empty });
++    const { user } = await renderApp({ url: "/clients?q=Иванов" });
++    expect(await screen.findByText("Ничего не найдено")).toBeInTheDocument();
++    await user.click(screen.getByRole("button", { name: "Сбросить фильтры" }));
++    await waitFor(() => expect(screen.queryByText("Ничего не найдено")).not.toBeInTheDocument());
++  });
++
++  it("AC-09: ошибка первой порции и повтор", async () => {
++    setMockScenario({ scenario: MOCK_SCENARIO.errorFirstPage });
++    const { user } = await renderApp({ url: "/clients" });
++    expect(await screen.findByText("Не удалось загрузить клиентов")).toBeInTheDocument();
++    setMockScenario({ scenario: MOCK_SCENARIO.default });
++    await user.click(screen.getByRole("button", { name: "Повторить" }));
++    expect(await screen.findByRole("table", { name: "Список клиентов" })).toBeInTheDocument();
++  });
++
++  it("AC-09: 403 показывает состояние «Нет доступа»", async () => {
++    setMockScenario({ scenario: MOCK_SCENARIO.forbidden });
++    await renderApp({ url: "/clients" });
++    expect(
++      await screen.findByText("Раздел недоступен. Обратитесь к персональному менеджеру"),
++    ).toBeInTheDocument();
++  });
++
++  it("AC-08 и AC-09: догрузка по прокрутке; ошибка догрузки оставляет строки", async () => {
++    setMockScenario({ scenario: MOCK_SCENARIO.errorNextPage });
++    await renderApp({ url: "/clients" });
++    const table = await screen.findByRole("table", { name: "Список клиентов" });
++    const rowsBefore = within(table).getAllByRole("row").length;
++    const scroller = document.querySelector<HTMLElement>(SCROLLER_SELECTOR);
++    expect(scroller).not.toBeNull();
++    if (scroller) {
++      scroller.scrollTop = 48 * 45;
++      fireEvent.scroll(scroller);
++    }
++    expect(await screen.findByText("Не удалось загрузить клиентов")).toBeInTheDocument();
++    expect(within(table).getAllByRole("row").length).toBe(rowsBefore);
++    expect(requestsWith("cursor").length).toBeGreaterThan(0);
++  });
++
++  it("AC-14: Enter на строке открывает карточку клиента", async () => {
++    const { user, router } = await renderApp({ url: "/clients" });
++    const table = await screen.findByRole("table", { name: "Список клиентов" });
++    const firstRow = within(table).getAllByRole("row")[1];
++    firstRow?.focus();
++    await user.keyboard("{Enter}");
++    await waitFor(() => expect(router.state.location.pathname).toMatch(/^\/clients\/.+/));
++  });
++
++  it("AC-13: скрытая колонка остаётся скрытой после перемонтирования, «ФИО» скрыть нельзя", async () => {
++    const { user, unmount } = await renderApp({ url: "/clients" });
++    await screen.findByRole("table", { name: "Список клиентов" });
++    await user.click(screen.getByRole("button", { name: "Настроить колонки" }));
++    expect(await screen.findByRole("checkbox", { name: "ФИО" })).toBeDisabled();
++    await user.click(screen.getByRole("checkbox", { name: "Телефон" }));
++    await waitFor(() => expect(screen.queryByRole("columnheader", { name: "Телефон" })).not.toBeInTheDocument());
++    unmount();
++
++    await renderApp({ url: "/clients" });
++    await screen.findByRole("table", { name: "Список клиентов" });
++    expect(screen.queryByRole("columnheader", { name: "Телефон" })).not.toBeInTheDocument();
++  });
++});
+diff --git a/src/widgets/clients-table/ClientsTable.tsx b/src/widgets/clients-table/ClientsTable.tsx
+new file mode 100644
+index 0000000..78cce03
+--- /dev/null
++++ b/src/widgets/clients-table/ClientsTable.tsx
+@@ -0,0 +1,224 @@
++import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
++import { useElementScrollRestoration, useNavigate } from "@tanstack/react-router";
++import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
++import { useVirtualizer } from "@tanstack/react-virtual";
++import { Button, Empty, Flex, Result, Skeleton, Typography, theme } from "antd";
++import { useEffect, useRef } from "react";
++import { getClientSort, nextSort, toClientListParams, toSortSearch, useClients } from "@/entities/clients";
++import { ClientFilters, useClientsSearchState } from "@/features/client-filters";
++import { ColumnSettingsButton, useColumnVisibility } from "@/features/client-columns";
++import { SORT_DIRECTION, isHttpError } from "@/shared/api";
++import type { Client } from "@/shared/api";
++import { CLIENTS_SCROLL_ID } from "./constants";
++import { CLIENT_COLUMNS, RIGHT_ALIGNED_COLUMNS, SORT_FIELD_BY_COLUMN } from "./columns";
++import styles from "./ClientsTable.module.css";
++
++const ROW_HEIGHT = 48;
++const OVERSCAN = 10;
++const PREFETCH_THRESHOLD = 10;
++const SKELETON_ROWS = 10;
++
++export const ClientsTable = () => {
++  const { token } = theme.useToken();
++  const navigate = useNavigate();
++  const { search, updateSearch, resetFilters, hasFilters } = useClientsSearchState();
++  const sort = getClientSort(search);
++  const list = useClients(toClientListParams(search));
++  const { visibility, setColumnVisible, resetColumnVisibility } = useColumnVisibility();
++
++  const table = useReactTable({
++    data: list.clients,
++    columns: CLIENT_COLUMNS,
++    getCoreRowModel: getCoreRowModel(),
++    getRowId: (row) => row.id,
++    manualSorting: true,
++    manualFiltering: true,
++    state: { columnVisibility: visibility },
++  });
++  const rows = table.getRowModel().rows;
++
++  const scrollRef = useRef<HTMLDivElement>(null);
++  const restoredScroll = useElementScrollRestoration({ id: CLIENTS_SCROLL_ID });
++  const virtualizer = useVirtualizer({
++    count: rows.length,
++    getScrollElement: () => scrollRef.current,
++    estimateSize: () => ROW_HEIGHT,
++    overscan: OVERSCAN,
++    initialOffset: restoredScroll?.scrollY,
++    getItemKey: (index) => rows[index]?.id ?? index,
++  });
++
++  const visibleEnd = virtualizer.range?.endIndex ?? -1;
++  const { hasNextPage, isFetchingNextPage, isFetchNextPageError, fetchNextPage } = list;
++  useEffect(() => {
++    if (!hasNextPage || isFetchingNextPage || isFetchNextPageError) {
++      return;
++    }
++    if (rows.length - 1 - visibleEnd <= PREFETCH_THRESHOLD) {
++      fetchNextPage();
++    }
++  }, [hasNextPage, isFetchingNextPage, isFetchNextPageError, fetchNextPage, rows.length, visibleEnd]);
++
++  const openCard = (clientId: Client["id"]) => {
++    void navigate({ to: "/clients/$clientId", params: { clientId } });
++  };
++
++  const renderTable = () => {
++    const virtualRows = virtualizer.getVirtualItems();
++    const lastRow = virtualRows.at(-1);
++    const paddingTop = virtualRows[0]?.start ?? 0;
++    const paddingBottom = lastRow ? virtualizer.getTotalSize() - lastRow.end : 0;
++    const columnCount = table.getVisibleLeafColumns().length;
++
++    return (
++      <>
++        <table className={styles.table} aria-label="Список клиентов">
++          <thead>
++            {table.getHeaderGroups().map((group) => (
++              <tr key={group.id}>
++                {group.headers.map((header) => {
++                  const sortField = SORT_FIELD_BY_COLUMN.get(header.column.id);
++                  const isSorted = sortField !== undefined && sortField === sort.field;
++                  const ariaSort = isSorted
++                    ? sort.direction === SORT_DIRECTION.asc
++                      ? "ascending"
++                      : "descending"
++                    : undefined;
++                  const label = flexRender(header.column.columnDef.header, header.getContext());
++                  return (
++                    <th
++                      key={header.id}
++                      scope="col"
++                      aria-sort={ariaSort}
++                      className={`${styles.headerCell} ${RIGHT_ALIGNED_COLUMNS.has(header.column.id) ? styles.rightAligned : ""}`}
++                      style={{ background: token.colorBgContainer }}
++                    >
++                      {sortField === undefined ? (
++                        label
++                      ) : (
++                        <button
++                          type="button"
++                          className={styles.sortButton}
++                          onClick={() => {
++                            updateSearch({ sort: toSortSearch(nextSort(sort, sortField)) });
++                          }}
++                        >
++                          {label}
++                          {isSorted &&
++                            (sort.direction === SORT_DIRECTION.asc ? (
++                              <ArrowUpOutlined aria-hidden />
++                            ) : (
++                              <ArrowDownOutlined aria-hidden />
++                            ))}
++                        </button>
++                      )}
++                    </th>
++                  );
++                })}
++              </tr>
++            ))}
++          </thead>
++          <tbody>
++            {paddingTop > 0 && (
++              <tr aria-hidden>
++                <td colSpan={columnCount} style={{ height: paddingTop, padding: 0 }} />
++              </tr>
++            )}
++            {virtualRows.map((virtualRow) => {
++              const row = rows[virtualRow.index];
++              if (!row) {
++                return null;
++              }
++              return (
++                <tr
++                  key={row.id}
++                  tabIndex={0}
++                  className={styles.row}
++                  style={{ height: ROW_HEIGHT }}
++                  onClick={() => {
++                    openCard(row.original.id);
++                  }}
++                  onKeyDown={(event) => {
++                    if (event.key === "Enter") {
++                      openCard(row.original.id);
++                    }
++                  }}
++                >
++                  {row.getVisibleCells().map((cell) => (
++                    <td
++                      key={cell.id}
++                      className={`${styles.cell} ${RIGHT_ALIGNED_COLUMNS.has(cell.column.id) ? styles.rightAligned : ""}`}
++                    >
++                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
++                    </td>
++                  ))}
++                </tr>
++              );
++            })}
++            {paddingBottom > 0 && (
++              <tr aria-hidden>
++                <td colSpan={columnCount} style={{ height: paddingBottom, padding: 0 }} />
++              </tr>
++            )}
++          </tbody>
++        </table>
++        {list.isFetchingNextPage && <div role="status">Загружаем ещё…</div>}
++        {list.isFetchNextPageError && (
++          <Flex align="center" gap="middle">
++            <Typography.Text type="danger">Не удалось загрузить клиентов</Typography.Text>
++            <Button onClick={list.fetchNextPage}>Повторить</Button>
++          </Flex>
++        )}
++      </>
++    );
++  };
++
++  const renderContent = () => {
++    if (list.isPending) {
++      return <Skeleton active title={false} paragraph={{ rows: SKELETON_ROWS }} />;
++    }
++    if (list.isError && list.total === undefined) {
++      return isHttpError(list.error, 403) ? (
++        <Result status="403" title="Раздел недоступен. Обратитесь к персональному менеджеру" />
++      ) : (
++        <Result
++          status="error"
++          title="Не удалось загрузить клиентов"
++          extra={<Button onClick={list.refetch}>Повторить</Button>}
++        />
++      );
++    }
++    if (list.total === 0) {
++      return hasFilters ? (
++        <Empty description="Ничего не найдено">
++          <Button onClick={resetFilters}>Сбросить фильтры</Button>
++        </Empty>
++      ) : (
++        <Empty description="У вас пока нет клиентов. Поделитесь реферальной ссылкой, чтобы пригласить первого" />
++      );
++    }
++    return renderTable();
++  };
++
++  return (
++    <Flex vertical gap="middle" className={styles.root}>
++      <Flex align="baseline" gap="small">
++        <Typography.Title level={2} style={{ margin: 0 }}>
++          Мои клиенты
++        </Typography.Title>
++        {list.total !== undefined && <Typography.Text type="secondary">{list.total.toLocaleString("ru-RU")}</Typography.Text>}
++      </Flex>
++      <ClientFilters />
++      <Flex justify="flex-end">
++        <ColumnSettingsButton
++          visibility={visibility}
++          onVisibleChange={setColumnVisible}
++          onReset={resetColumnVisibility}
++        />
++      </Flex>
++      <div ref={scrollRef} className={styles.scroller} data-scroll-restoration-id={CLIENTS_SCROLL_ID}>
++        {renderContent()}
++      </div>
++    </Flex>
++  );
++};
+diff --git a/src/widgets/clients-table/columns.tsx b/src/widgets/clients-table/columns.tsx
+new file mode 100644
+index 0000000..4bb6adb
+--- /dev/null
++++ b/src/widgets/clients-table/columns.tsx
+@@ -0,0 +1,63 @@
++import { createColumnHelper } from "@tanstack/react-table";
++import type { ColumnDef } from "@tanstack/react-table";
++import { Tag, theme } from "antd";
++import dayjs from "dayjs";
++import { CLIENT_STATUS_LABEL } from "@/entities/clients";
++import { CLIENT_COLUMN, CLIENT_COLUMN_LABEL } from "@/features/client-columns";
++import { CLIENT_SORT_FIELD } from "@/shared/api";
++import type { Client, ClientSortField, ClientStatus } from "@/shared/api";
++import { formatMoney } from "@/shared/lib/money";
++import type { StatusTokens } from "@/shared/ui";
++
++const STATUS_COLOR_TOKEN: Record<ClientStatus, keyof StatusTokens> = {
++  LEAD: "colorStatusNeutral",
++  ACCOUNT_OPENED: "colorStatusInfo",
++  FUNDED: "colorStatusSuccess",
++  INACTIVE: "colorStatusMuted",
++};
++
++/** Колонки, по которым сервер умеет сортировать (п. 4.1). */
++export const SORT_FIELD_BY_COLUMN: ReadonlyMap<string, ClientSortField> = new Map<string, ClientSortField>([
++  [CLIENT_COLUMN.fullName, CLIENT_SORT_FIELD.fullName],
++  [CLIENT_COLUMN.registeredAt, CLIENT_SORT_FIELD.registeredAt],
++  [CLIENT_COLUMN.commissionKopecks, CLIENT_SORT_FIELD.commissionKopecks],
++]);
++
++export const RIGHT_ALIGNED_COLUMNS: ReadonlySet<string> = new Set([CLIENT_COLUMN.commissionKopecks]);
++
++const StatusTag = ({ status }: { status: ClientStatus }) => {
++  const { token } = theme.useToken();
++  return <Tag color={token[STATUS_COLOR_TOKEN[status]]}>{CLIENT_STATUS_LABEL[status]}</Tag>;
++};
++
++const columnHelper = createColumnHelper<Client>();
++
++export const CLIENT_COLUMNS: ColumnDef<Client>[] = [
++  columnHelper.accessor("fullName", {
++    id: CLIENT_COLUMN.fullName,
++    header: CLIENT_COLUMN_LABEL.fullName,
++  }),
++  columnHelper.accessor("phoneMasked", {
++    id: CLIENT_COLUMN.phoneMasked,
++    header: CLIENT_COLUMN_LABEL.phoneMasked,
++  }),
++  columnHelper.accessor("status", {
++    id: CLIENT_COLUMN.status,
++    header: CLIENT_COLUMN_LABEL.status,
++    cell: (info) => <StatusTag status={info.getValue()} />,
++  }),
++  columnHelper.accessor("registeredAt", {
++    id: CLIENT_COLUMN.registeredAt,
++    header: CLIENT_COLUMN_LABEL.registeredAt,
++    cell: (info) => dayjs(info.getValue()).format("DD.MM.YYYY"),
++  }),
++  columnHelper.accessor("commissionKopecks", {
++    id: CLIENT_COLUMN.commissionKopecks,
++    header: CLIENT_COLUMN_LABEL.commissionKopecks,
++    cell: (info) => formatMoney(info.getValue()),
++  }),
++  columnHelper.accessor("productsCount", {
++    id: CLIENT_COLUMN.productsCount,
++    header: CLIENT_COLUMN_LABEL.productsCount,
++  }),
++];
+diff --git a/src/widgets/clients-table/constants.ts b/src/widgets/clients-table/constants.ts
+new file mode 100644
+index 0000000..5446348
+--- /dev/null
++++ b/src/widgets/clients-table/constants.ts
+@@ -0,0 +1,2 @@
++/** Общий id скролл-контейнера списка: по нему работает восстановление прокрутки и `scrollToTopSelectors`. */
++export const CLIENTS_SCROLL_ID = "clients-table";
+diff --git a/src/widgets/clients-table/index.ts b/src/widgets/clients-table/index.ts
+new file mode 100644
+index 0000000..68da3e0
+--- /dev/null
++++ b/src/widgets/clients-table/index.ts
+@@ -0,0 +1,2 @@
++export { ClientsTable } from "./ClientsTable";
++export { CLIENTS_SCROLL_ID } from "./constants";

@@ -1,0 +1,690 @@
+{
+  "config": {
+    "id": "H-full-on",
+    "model": "claude-haiku-5-5",
+    "spec": "full",
+    "contour": true
+  },
+  "run": null,
+  "pilot": true,
+  "status": "complete",
+  "startedAt": "2026-10-22T15:43:28.283Z",
+  "finishedAt": "2026-10-22T16:07:55.838Z",
+  "baseCommit": "541a56ff5977f131027cbcab71059da0ad1fcb21",
+  "claudeCodeVersion": "2.1.199",
+  "modelIds": [
+    "claude-haiku-5-5",
+    "claude-haiku-4-5-20251001"
+  ],
+  "effort": {
+    "passed": null,
+    "reportedByCli": null,
+    "documentedDefaultForModel": "medium",
+    "note": "--effort не передаётся; CLI 2.1.199 фактическое значение не сообщает"
+  },
+  "limits": {
+    "timeMs": 1500000,
+    "maxTurns": 300
+  },
+  "metrics": {
+    "wallMs": 1273085,
+    "apiMs": 1109578,
+    "turns": 129,
+    "requests": 93,
+    "terminalReason": "completed",
+    "exitCode": 0,
+    "blockedCheckAttempts": 0,
+    "leftoverProcessesKilled": 0
+  },
+  "tokens": {
+    "totals": {
+      "input": 4007,
+      "output": 937,
+      "cacheWrite": 267875,
+      "cacheRead": 17165825,
+      "costUsd": 1.0314214300000004
+    },
+    "byModel": {
+      "claude-haiku-5-5": {
+        "requests": 93,
+        "input": 3474,
+        "output": 913,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 267875,
+        "cacheRead": 17165825,
+        "costUsd": 1.0307684300000004
+      },
+      "claude-haiku-4-5-20251001": {
+        "requests": 0,
+        "input": 533,
+        "output": 24,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 0,
+        "cacheRead": 0,
+        "costUsd": 0.0006529999999999999,
+        "background": true
+      }
+    },
+    "backgroundUsageKnown": true,
+    "usageCheck": {
+      "claude-haiku-5-5": {
+        "inputDiff": 0,
+        "outputDiff": -190167,
+        "cacheReadDiff": 0,
+        "cacheWriteDiff": 0
+      }
+    }
+  },
+  "costUsd": 1.4619,
+  "cliCostUsd": 9.634272499999996,
+  "prices": {
+    "checkedAt": "2026-10-22",
+    "source": "https://platform.claude.com/docs/en/about-claude/pricing"
+  },
+  "usageWindow": {
+    "before": {
+      "at": "2026-10-22T15:43:31.923Z",
+      "sessionPercent": null,
+      "sessionResets": null,
+      "weekPercent": null,
+      "error": "не прочитано: /usage вызывался с токеном прогона (исправлено после пилота)"
+    },
+    "after": {
+      "at": "2026-10-22T16:07:55.794Z",
+      "sessionPercent": 56,
+      "sessionResets": "Oct 22 at 9:20pm (Europe/Moscow)",
+      "weekPercent": 19
+    },
+    "sessionDeltaPercent": null,
+    "weekDeltaPercent": null,
+    "note": "До пилота /usage читался токеном прогона и вернул статистику сессии вместо окна (исправлено). Ориентир: 15:15 — сессия 28%, неделя 16%; после пилота — 56% и 19%. В интервал входит и разработка харнесса в другой сессии, поэтому пилот занял не больше 28 п. п. пятичасового окна и не больше 3 п. п. недельного."
+  },
+  "protection": {
+    "violation": false,
+    "files": []
+  },
+  "isolation": {
+    "tools": [
+      "Task",
+      "Bash",
+      "CronCreate",
+      "CronDelete",
+      "CronList",
+      "DesignSync",
+      "Edit",
+      "EnterWorktree",
+      "ExitWorktree",
+      "Monitor",
+      "NotebookEdit",
+      "PushNotification",
+      "Read",
+      "RemoteTrigger",
+      "ReportFindings",
+      "ScheduleWakeup",
+      "SendMessage",
+      "TaskOutput",
+      "TaskStop",
+      "TodoWrite",
+      "ToolSearch",
+      "WebFetch",
+      "WebSearch",
+      "Workflow",
+      "Write"
+    ],
+    "mcpServers": [],
+    "skills": [],
+    "plugins": [],
+    "memoryPaths": {
+      "auto": "~/.local/share/sdd-eval/runs/H-full-on/pilot-20261022T154328/private/claude-config/projects/-TMPDIR-sdd-eval-runs-H-full-on-pilot-20261022T154328/memory/"
+    },
+    "apiKeySource": "none",
+    "leakSuspect": true,
+    "markers": [
+      "~/.local/share/sdd-eval/runs"
+    ],
+    "forbiddenPathAttempts": 0,
+    "tokenFoundIn": []
+  },
+  "artifacts": {
+    "hasPlan": true,
+    "diff": {
+      "files": 26,
+      "added": 1590,
+      "removed": 5
+    },
+    "screens": [
+      {
+        "name": "01-default",
+        "ok": true,
+        "error": null
+      },
+      {
+        "name": "02-filtered",
+        "ok": true,
+        "error": null
+      },
+      {
+        "name": "03-after-back",
+        "ok": true,
+        "error": null
+      },
+      {
+        "name": "04-nothing-found",
+        "ok": true,
+        "error": null
+      },
+      {
+        "name": "05-next-page-error",
+        "ok": true,
+        "error": null
+      }
+    ],
+    "logsDir": "~/.local/share/sdd-eval/runs/H-full-on/pilot-20261022T154328"
+  },
+  "acceptance": {
+    "rule": "критерий засчитан, если прошёл в большинстве из 3 повторов приёмки",
+    "summary": {
+      "passed": 14,
+      "failed": 1,
+      "total": 15
+    },
+    "flaky": [],
+    "criteria": {
+      "AC-01": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке: Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ hasNot: getByRole('columnheader') }) | Expected: 10 | Received: 22"
+      },
+      "AC-02": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-03": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-04": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-05": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-06": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-07": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-08": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-09": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-10": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-11": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-12": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-13": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-14": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-15": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      }
+    }
+  },
+  "acPassed": 14,
+  "acCounted": 14,
+  "accepted": false,
+  "agentResultText": "Реализация готова, `PLAN.md` записан и дополнен фактическими отклонениями.\n\n**Проверки:** `npm run check` (типы, ESLint с `--max-warnings 0`, 83 теста Vitest) и `npm run test:e2e` (11 тестов Playwright) проходят. Защищённые файлы не менялись: в `git status` только `src/app/router.tsx` и `src/pages/clients/ClientsPage.tsx`, остальное новое.\n\n**Что сделано:**\n- `entities/client`: разбор параметров адреса, запрос с курсором, кэш 60 с.\n- `features/client-filters`: поиск с debounce 300 мс, статус, период, сброс.\n- `features/client-columns`: видимость колонок в `localStorage` по агенту, с версией и проверкой Zod.\n- `widgets/clients-table`: таблица TanStack с виртуализацией, сортировка с `aria-sort`, все состояния из п. 7, переход по клику и Enter.\n- Роутер: `validateSearch` и восстановление прокрутки.\n\n**Найдено и исправлено по ходу:**\n- Бесконечный цикл обновлений из-за пересоздания массива данных; устранён мемоизацией и `manualPagination`.\n- TanStack сливает результат `validateSearch` с сырым адресом, поэтому отброшенные параметры возвращаются явно как `undefined`.\n\n**Не покрыто тестами:** UI выбора периода регистрации (параметры проверены через адрес). AC-08 и AC-15 в E2E проверены на нескольких порциях, а не на всех 10 000 строках.\n\nИзменения не закоммичены, ждут вашего решения.",
+  "acceptanceHistory": [
+    {
+      "at": "2026-10-22T16:07:55.838Z",
+      "summary": {
+        "passed": 9,
+        "failed": 6,
+        "total": 15
+      },
+      "criteria": {
+        "AC-01": {
+          "status": "failed",
+          "reason": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке: Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ has: getByRole('cell').or(getByRole('gridcell')) }) | Expected: 10 | Received: 22"
+        },
+        "AC-02": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-03": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-04": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-05": {
+          "status": "failed",
+          "reason": "AC-05 фильтр по статусу передаётся в запрос: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-06": {
+          "status": "failed",
+          "reason": "AC-06 смена фильтра и смена сортировки загружают первую порцию и прокручивают таблицу к началу: Error: expect(received).toBe(expected) // Object.is equality | Expected: true | Received: false"
+        },
+        "AC-07": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-08": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-09": {
+          "status": "failed",
+          "reason": "AC-09 загрузка следующей порции: индикатор «Загружаем ещё…» с ролью status, строки остаются: Error: expect(received).toBeGreaterThanOrEqual(expected) | Expected: >= 829 | Received:    794"
+        },
+        "AC-10": {
+          "status": "failed",
+          "reason": "AC-10 фильтры и сортировка отражаются в адресной строке, сортировка по умолчанию не пишется: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-11": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-12": {
+          "status": "failed",
+          "reason": "AC-12 после перезагрузки восстанавливаются фильтры и сортировка: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-13": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-14": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-15": {
+          "status": "passed",
+          "reason": null
+        }
+      },
+      "replacedBecause": "приёмка: служебные строки таблицы (индикатор, ошибка догрузки) больше не считаются строками данных"
+    },
+    {
+      "at": "2026-10-22T16:16:18.215Z",
+      "summary": {
+        "passed": 10,
+        "failed": 5,
+        "total": 15
+      },
+      "criteria": {
+        "AC-01": {
+          "status": "failed",
+          "reason": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке: Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ has: getByRole('cell').or(getByRole('gridcell')) }) | Expected: 10 | Received: 22"
+        },
+        "AC-02": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-03": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-04": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-05": {
+          "status": "failed",
+          "reason": "AC-05 фильтр по статусу передаётся в запрос: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-06": {
+          "status": "failed",
+          "reason": "AC-06 смена фильтра и смена сортировки загружают первую порцию и прокручивают таблицу к началу: Error: expect(received).toBe(expected) // Object.is equality | Expected: true | Received: false"
+        },
+        "AC-07": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-08": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-09": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-10": {
+          "status": "failed",
+          "reason": "AC-10 фильтры и сортировка отражаются в адресной строке, сортировка по умолчанию не пишется: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-11": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-12": {
+          "status": "failed",
+          "reason": "AC-12 после перезагрузки восстанавливаются фильтры и сортировка: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-13": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-14": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-15": {
+          "status": "passed",
+          "reason": null
+        }
+      },
+      "replacedBecause": "приёмка: статус выбирается кликом по видимому пункту, а не вводом текста"
+    },
+    {
+      "at": "2026-10-22T16:22:24.783Z",
+      "summary": {
+        "passed": 14,
+        "failed": 1,
+        "total": 15
+      },
+      "criteria": {
+        "AC-01": {
+          "status": "failed",
+          "reason": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке: Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ has: getByRole('cell').or(getByRole('gridcell')) }) | Expected: 10 | Received: 22"
+        },
+        "AC-02": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-03": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-04": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-05": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-06": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-07": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-08": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-09": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-10": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-11": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-12": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-13": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-14": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-15": {
+          "status": "passed",
+          "reason": null
+        }
+      },
+      "replacedBecause": "AC-01 после круга 1: скелетон считается по строкам таблицы без columnheader, а не по строкам с ячейками (спека, п. 7, ячеек не требует)"
+    },
+    {
+      "at": "2026-10-23T10:20:12.305Z",
+      "summary": {
+        "passed": 14,
+        "failed": 1,
+        "total": 15
+      },
+      "criteria": {
+        "AC-01": {
+          "status": "failed",
+          "reason": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке: Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ hasNot: getByRole('columnheader') }) | Expected: 10 | Received: 22"
+        },
+        "AC-02": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-03": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-04": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-05": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-06": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-07": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-08": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-09": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-10": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-11": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-12": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-13": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-14": {
+          "status": "passed",
+          "reason": null
+        },
+        "AC-15": {
+          "status": "passed",
+          "reason": null
+        }
+      },
+      "replacedBecause": "AC-15 считает уникальные успешные запросы; оценка по большинству из 3 повторов приёмки"
+    },
+    {
+      "at": "2026-10-23T12:10:51.333Z",
+      "rule": "критерий засчитан, если прошёл в большинстве из 3 повторов приёмки",
+      "summary": {
+        "passed": 14,
+        "failed": 1,
+        "total": 15
+      },
+      "flaky": [
+        "AC-10"
+      ],
+      "criteria": {
+        "AC-01": {
+          "status": "failed",
+          "passes": 0,
+          "repeats": 3,
+          "reason": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке: Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ hasNot: getByRole('columnheader') }) | Expected: 10 | Received: 22"
+        },
+        "AC-02": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-03": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-04": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-05": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-06": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-07": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-08": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-09": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-10": {
+          "status": "passed",
+          "passes": 2,
+          "repeats": 3,
+          "reason": "AC-10 фильтры и сортировка отражаются в адресной строке, сортировка по умолчанию не пишется: Error: expect(received).toEqual(expected) // deep equality"
+        },
+        "AC-11": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-12": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-13": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-14": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        },
+        "AC-15": {
+          "status": "passed",
+          "passes": 3,
+          "repeats": 3,
+          "reason": null
+        }
+      },
+      "replacedBecause": "Правка 6: помощник выбора статуса ждёт отрисовки пункта списка до 5 с, прежде чем перейти к вводу"
+    }
+  ],
+  "acceptanceRescoredAt": "2026-10-26T07:49:41.696Z",
+  "costUsdFromStream": 1.0314214300000004,
+  "costEstimate": {
+    "lowUsd": 1.1249,
+    "highUsd": 1.5071,
+    "estimateUsd": 1.4619,
+    "longContextRequests": 82,
+    "requests": 93,
+    "note": "Пилот шёл без --include-partial-messages: output_tokens в событиях занижен (913 против 191 080 в modelUsage). Вход и кэш посчитаны по каждому запросу точно; 191 080 выходных токенов распределены по доле запросов с промптом > 100K. В следующих прогонах usage берётся из message_delta."
+  }
+}

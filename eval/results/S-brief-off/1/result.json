@@ -1,0 +1,280 @@
+{
+  "config": {
+    "id": "S-brief-off",
+    "model": "claude-sonnet-5-5",
+    "spec": "brief",
+    "contour": false
+  },
+  "run": 1,
+  "pilot": false,
+  "status": "complete",
+  "startedAt": "2026-10-26T07:13:16.271Z",
+  "finishedAt": "2026-10-26T07:35:35.180Z",
+  "baseCommit": "541a56ff5977f131027cbcab71059da0ad1fcb21",
+  "claudeCodeVersion": "2.1.199",
+  "modelIds": [
+    "claude-sonnet-5-5",
+    "claude-haiku-4-5-20251001"
+  ],
+  "effort": {
+    "passed": null,
+    "reportedByCli": null,
+    "documentedDefaultForModel": "high",
+    "note": "--effort не передаётся; CLI 2.1.199 фактическое значение не сообщает"
+  },
+  "limits": {
+    "timeMs": 1500000,
+    "maxTurns": 300
+  },
+  "metrics": {
+    "wallMs": 772493,
+    "apiMs": 770497,
+    "turns": 51,
+    "requests": 42,
+    "terminalReason": "completed",
+    "exitCode": 0,
+    "blockedCheckAttempts": 7,
+    "leftoverProcessesKilled": 0
+  },
+  "tokens": {
+    "totals": {
+      "input": 6161,
+      "output": 111490,
+      "cacheWrite": 183659,
+      "cacheRead": 4951191,
+      "costUsd": 2.3563341000000007
+    },
+    "byModel": {
+      "claude-sonnet-5-5": {
+        "requests": 42,
+        "input": 5628,
+        "output": 111468,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 183659,
+        "cacheRead": 4951191,
+        "costUsd": 2.3556911000000005
+      },
+      "claude-haiku-4-5-20251001": {
+        "requests": 0,
+        "input": 533,
+        "output": 22,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 0,
+        "cacheRead": 0,
+        "costUsd": 0.000643,
+        "background": true
+      }
+    },
+    "backgroundUsageKnown": true,
+    "usageCheck": {
+      "claude-sonnet-5-5": {
+        "inputDiff": 0,
+        "outputDiff": 0,
+        "cacheReadDiff": 0,
+        "cacheWriteDiff": 0
+      }
+    },
+    "incompleteRequests": 0
+  },
+  "costUsd": 2.3563341000000007,
+  "cliCostUsd": 4.2768583,
+  "prices": {
+    "checkedAt": "2026-10-22",
+    "source": "https://platform.claude.com/docs/en/about-claude/pricing"
+  },
+  "usageWindow": {
+    "before": {
+      "at": "2026-10-26T07:13:18.658Z",
+      "sessionPercent": 11,
+      "sessionResets": "Oct 26 at 3pm (Europe/Moscow)",
+      "weekPercent": 32
+    },
+    "after": {
+      "at": "2026-10-26T07:35:35.114Z",
+      "sessionPercent": 29,
+      "sessionResets": "Oct 26 at 3pm (Europe/Moscow)",
+      "weekPercent": 34
+    },
+    "sessionDeltaPercent": 18,
+    "weekDeltaPercent": 2,
+    "note": "Окно общее для подписки: в дельту входят и запросы других сессий за то же время"
+  },
+  "protection": {
+    "violation": false,
+    "files": []
+  },
+  "isolation": {
+    "tools": [
+      "Task",
+      "Bash",
+      "CronCreate",
+      "CronDelete",
+      "CronList",
+      "DesignSync",
+      "Edit",
+      "EnterWorktree",
+      "ExitWorktree",
+      "Monitor",
+      "NotebookEdit",
+      "PushNotification",
+      "Read",
+      "RemoteTrigger",
+      "ReportFindings",
+      "ScheduleWakeup",
+      "SendMessage",
+      "TaskCreate",
+      "TaskGet",
+      "TaskList",
+      "TaskOutput",
+      "TaskStop",
+      "TaskUpdate",
+      "ToolSearch",
+      "WebFetch",
+      "WebSearch",
+      "Workflow",
+      "Write"
+    ],
+    "mcpServers": [],
+    "skills": [],
+    "plugins": [],
+    "memoryPaths": {
+      "auto": "$TMPDIR/sdd-eval-runs/S-brief-off-run1-20261026T071316.claude-config/projects/-TMPDIR-sdd-eval-runs-S-brief-off-run1-20261026T071316/memory/"
+    },
+    "apiKeySource": "none",
+    "leakSuspect": false,
+    "markers": [],
+    "forbiddenPathAttempts": 0,
+    "tokenFoundIn": []
+  },
+  "artifacts": {
+    "hasPlan": true,
+    "diff": {
+      "files": 36,
+      "added": 1887,
+      "removed": 2
+    },
+    "screens": [
+      {
+        "name": "01-default",
+        "ok": true,
+        "error": null
+      },
+      {
+        "name": "02-filtered",
+        "ok": true,
+        "error": null
+      },
+      {
+        "name": "03-after-back",
+        "ok": true,
+        "error": null
+      }
+    ],
+    "logsDir": "~/.local/share/sdd-eval/runs/S-brief-off/run1-20261026T071316"
+  },
+  "acceptance": {
+    "rule": "критерий засчитан, если прошёл в большинстве из 3 повторов приёмки",
+    "summary": {
+      "passed": 3,
+      "failed": 12,
+      "total": 15
+    },
+    "flaky": [],
+    "criteria": {
+      "AC-01": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке: Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ hasNot: getByRole('columnheader') }) | Expected: 10 | Received: 20"
+      },
+      "AC-02": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-02 колонки по умолчанию: порядок, видимость, форматы: Error: expect(received).toEqual(expected) // deep equality"
+      },
+      "AC-03": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-04": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      },
+      "AC-05": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-05 фильтр по статусу передаётся в запрос: Error: expect(received).toEqual(expected) // deep equality"
+      },
+      "AC-06": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-06 смена фильтра и смена сортировки загружают первую порцию и прокручивают таблицу к началу: Error: expect(received).toBe(expected) // Object.is equality | Expected: true | Received: false"
+      },
+      "AC-07": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-07 клик по заголовку: desc → asc → desc, в запросе и в aria-sort: Error: expect(received).toBe(expected) // Object.is equality | Expected: \"commissionKopecks:desc\" | Received: \"commissionKopecks\""
+      },
+      "AC-08": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-08 прокрутка к концу подгружает порции, загрузка прекращается при nextCursor = null: Error: expect(locator).toBeInViewport() failed | Locator: getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ has: getByRole('cell').or(getByRole('gridcell')) }).filter({ hasText: /\\S/ }).filter({ has: getByRole('cell').or(getByRole('gridcell')).nth(1) }).filter({ has: getByRole('cell').or(getByRole('gridcell')).filter({ hasText: /^\\s*Кононова Феврония Григорьевна\\s*$/ }) }) | Expected: in viewport | Timeout: 10000ms"
+      },
+      "AC-09": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-09 пусто без фильтров: Error: expect(locator).toBeVisible() failed | Locator: getByText('У вас пока нет клиентов. Поделитесь реферальной ссылкой, чтобы пригласить первого') | Expected: visible | Timeout: 10000ms"
+      },
+      "AC-10": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-10 фильтры и сортировка отражаются в адресной строке, сортировка по умолчанию не пишется: Error: expect(received).toEqual(expected) // deep equality"
+      },
+      "AC-11": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-11 «Назад» браузера: фильтры, сортировка, строки без повторного запроса, строка перехода видна: Error: expect(received).toEqual(expected) // deep equality"
+      },
+      "AC-12": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-12 после перезагрузки восстанавливаются фильтры и сортировка: Error: expect(received).toBe(expected) // Object.is equality | Expected: \"commissionKopecks:asc\" | Received: \"commissionKopecks\""
+      },
+      "AC-13": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-13 скрытая колонка сохраняется между сессиями, не попадает в адрес, у другого агента своя настройка: Test timeout of 60000ms exceeded."
+      },
+      "AC-14": {
+        "status": "failed",
+        "passes": 0,
+        "repeats": 3,
+        "reason": "AC-14 у полей фильтров есть доступные подписи: Error: expect(locator).toBeVisible() failed | Locator: getByLabel('Период регистрации').first() | Expected: visible | Timeout: 10000ms"
+      },
+      "AC-15": {
+        "status": "passed",
+        "passes": 3,
+        "repeats": 3,
+        "reason": null
+      }
+    }
+  },
+  "acPassed": 3,
+  "acCounted": 3,
+  "accepted": false,
+  "agentResultText": "Раздел «Мои клиенты» реализован по плану, но проверить его не удалось. Типы, линтер, vitest и Playwright я не запускал. Bash отклонял `npm`, `node` и `tsc` ответом «Команда недоступна в этой конфигурации», и обходить это я не стал. Код сверял с типами библиотек только чтением и `grep`, так что ошибки типов или линтера возможны.\n\nПрогоните `npm run check` и `npm run test:e2e`, прежде чем принимать работу. Больше всего сомнений у меня в тесте с выбором статуса в Ant Design `Select` (`findByTitle(\"Пополнил\")`) и в e2e на восстановление прокрутки.\n\nВ `git status` защищённые файлы не тронуты. Изменены `src/app/router.tsx` и две заглушки страницы `/clients`, остальное — новые файлы.\n\n- **План:** `PLAN.md` лежит в корне. В нём состояния, сопоставление требований и тестов и 15 допущений.\n- **Что умеет таблица:** ФИО, телефон, статус, дата регистрации и комиссия. Поиск по ФИО с задержкой 300 мс, фильтр по нескольким статусам, фильтр по диапазону дат и сортировка по ФИО, дате и комиссии. Список подгружается при прокрутке; есть состояния загрузки, пусто, ошибки с повтором, догрузки и конца списка. Клик по строке или Enter открывает карточку.\n- **Состояние:** фильтры и сортировка живут в URL, настройки колонок — в `localStorage` отдельно для каждого агента. Позицию прокрутки восстанавливает роутер.\n- **Настройка колонок:** можно скрывать и переставлять колонки. Последнюю видимую скрыть нельзя.\n- **Тесты (все не запускались):** unit для схемы URL и хранилища колонок, интеграционные для таблицы и e2e в `e2e/clients.spec.ts`.\n\nДопущения, которые стоит проверить:\n- В `SPEC.md` нет «п. 4.2» про статусы, на который ссылается тема. Я взял подписи «Лид», «Счёт открыт», «Пополнил», «Неактивен» и готовые токены цветов.\n- Ширину колонок менять нельзя: спека просит только видимость, а `conventions.md` упоминает и ширину.\n- Поиск короче двух символов в запрос не уходит, потому что сервер отвечает 400. Вместо этого под полем появляется подсказка.\n- Позиция прокрутки после перезагрузки страни"
+}

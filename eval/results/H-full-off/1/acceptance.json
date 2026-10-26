@@ -1,0 +1,373 @@
+{
+  "copy": "$TMPDIR/sdd-eval-runs/rescore-H-full-off-20261026T072129",
+  "baseCommit": "541a56ff5977f131027cbcab71059da0ad1fcb21",
+  "runs": 3,
+  "flaky": [],
+  "perRun": [
+    {
+      "startedAt": "2026-10-26T07:21:33.923Z",
+      "durationMs": 157220,
+      "summary": {
+        "passed": 9,
+        "failed": 6,
+        "total": 15
+      },
+      "failed": [
+        "AC-01",
+        "AC-04",
+        "AC-07",
+        "AC-09",
+        "AC-13",
+        "AC-14"
+      ]
+    },
+    {
+      "startedAt": "2026-10-26T07:24:11.154Z",
+      "durationMs": 154394,
+      "summary": {
+        "passed": 9,
+        "failed": 6,
+        "total": 15
+      },
+      "failed": [
+        "AC-01",
+        "AC-04",
+        "AC-07",
+        "AC-09",
+        "AC-13",
+        "AC-14"
+      ]
+    },
+    {
+      "startedAt": "2026-10-26T07:26:45.558Z",
+      "durationMs": 156118,
+      "summary": {
+        "passed": 9,
+        "failed": 6,
+        "total": 15
+      },
+      "failed": [
+        "AC-01",
+        "AC-04",
+        "AC-07",
+        "AC-09",
+        "AC-13",
+        "AC-14"
+      ]
+    }
+  ],
+  "startedAt": "2026-10-26T07:21:33.923Z",
+  "durationMs": 467732,
+  "summary": {
+    "passed": 9,
+    "failed": 6,
+    "total": 15
+  },
+  "criteria": {
+    "AC-01": {
+      "status": "failed",
+      "reason": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке: Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ hasNot: getByRole('columnheader') }) | Expected: 10 | Received: 21",
+      "tests": [
+        {
+          "title": "AC-01 скелетон на 10 строк при доступной панели фильтров, затем первые клиенты по дате регистрации и total в заголовке",
+          "file": "ac-01.spec.ts",
+          "status": "failed",
+          "durationMs": 10697,
+          "error": "Error: expect(locator).toHaveCount(expected) failed | Locator:  getByRole('table').or(getByRole('grid')).first().getByRole('row').filter({ hasNot: getByRole('columnheader') }) | Expected: 10 | Received: 21"
+        }
+      ]
+    },
+    "AC-02": {
+      "status": "passed",
+      "tests": [
+        {
+          "title": "AC-02 колонки по умолчанию: порядок, видимость, форматы",
+          "file": "ac-02.spec.ts",
+          "status": "passed",
+          "durationMs": 1672
+        },
+        {
+          "title": "AC-02 комиссия выровнена по правому краю колонки",
+          "file": "ac-02.spec.ts",
+          "status": "passed",
+          "durationMs": 1665
+        }
+      ]
+    },
+    "AC-03": {
+      "status": "passed",
+      "tests": [
+        {
+          "title": "AC-03 денежный формат: 1234567, 5 и 0 копеек",
+          "file": "ac-03.spec.ts",
+          "status": "passed",
+          "durationMs": 1440
+        }
+      ]
+    },
+    "AC-04": {
+      "status": "failed",
+      "reason": "AC-04 посимвольный ввод «Иванов» — ровно один запрос с q=Иванов после паузы 300 мс: Test timeout of 60000ms exceeded.",
+      "tests": [
+        {
+          "title": "AC-04 посимвольный ввод «Иванов» — ровно один запрос с q=Иванов после паузы 300 мс",
+          "file": "ac-04.spec.ts",
+          "status": "timedOut",
+          "durationMs": 65012,
+          "error": "Test timeout of 60000ms exceeded."
+        },
+        {
+          "title": "AC-04 строка короче 2 символов после удаления пробелов не отправляется",
+          "file": "ac-04.spec.ts",
+          "status": "timedOut",
+          "durationMs": 65009,
+          "error": "Test timeout of 60000ms exceeded."
+        }
+      ]
+    },
+    "AC-05": {
+      "status": "passed",
+      "tests": [
+        {
+          "title": "AC-05 фильтр по статусу передаётся в запрос",
+          "file": "ac-05.spec.ts",
+          "status": "passed",
+          "durationMs": 1905
+        },
+        {
+          "title": "AC-05 период регистрации передаётся в запрос как dateFrom и dateTo",
+          "file": "ac-05.spec.ts",
+          "status": "passed",
+          "durationMs": 988
+        },
+        {
+          "title": "AC-05 «Сбросить фильтры» видна только при заданных фильтрах и не сбрасывает сортировку",
+          "file": "ac-05.spec.ts",
+          "status": "passed",
+          "durationMs": 2044
+        }
+      ]
+    },
+    "AC-06": {
+      "status": "passed",
+      "tests": [
+        {
+          "title": "AC-06 смена фильтра и смена сортировки загружают первую порцию и прокручивают таблицу к началу",
+          "file": "ac-06.spec.ts",
+          "status": "passed",
+          "durationMs": 2954
+        }
+      ]
+    },
+    "AC-07": {
+      "status": "failed",
+      "reason": "AC-07 клик по заголовку: desc → asc → desc, в запросе и в aria-sort: Test timeout of 60000ms exceeded.",
+      "tests": [
+        {
+          "title": "AC-07 сортировка по умолчанию отражена в aria-sort заголовка «Дата регистрации»",
+          "file": "ac-07.spec.ts",
+          "status": "passed",
+          "durationMs": 816
+        },
+        {
+          "title": "AC-07 клик по заголовку: desc → asc → desc, в запросе и в aria-sort",
+          "file": "ac-07.spec.ts",
+          "status": "timedOut",
+          "durationMs": 65012,
+          "error": "Test timeout of 60000ms exceeded."
+        },
+        {
+          "title": "AC-07 несортируемая колонка не меняет сортировку",
+          "file": "ac-07.spec.ts",
+          "status": "passed",
+          "durationMs": 1450
+        }
+      ]
+    },
+    "AC-08": {
+      "status": "passed",
+      "tests": [
+        {
+          "title": "AC-08 прокрутка к концу подгружает порции, загрузка прекращается при nextCursor = null",
+          "file": "ac-08.spec.ts",
+          "status": "passed",
+          "durationMs": 3978
+        }
+      ]
+    },
+    "AC-09": {
+      "status": "failed",
+      "reason": "AC-09 пусто с фильтрами: «Ничего не найдено» и «Сбросить фильтры»: Test timeout of 60000ms exceeded.",
+      "tests": [
+        {
+          "title": "AC-09 пусто без фильтров",
+          "file": "ac-09.spec.ts",
+          "status": "passed",
+          "durationMs": 680
+        },
+        {
+          "title": "AC-09 пусто с фильтрами: «Ничего не найдено» и «Сбросить фильтры»",
+          "file": "ac-09.spec.ts",
+          "status": "timedOut",
+          "durationMs": 65009,
+          "error": "Test timeout of 60000ms exceeded."
+        },
+        {
+          "title": "AC-09 ошибка первой порции (error-first-page) и «Повторить»",
+          "file": "ac-09.spec.ts",
+          "status": "passed",
+          "durationMs": 1017
+        },
+        {
+          "title": "AC-09 ошибка первой порции (network-error) и «Повторить»",
+          "file": "ac-09.spec.ts",
+          "status": "passed",
+          "durationMs": 1051
+        },
+        {
+          "title": "AC-09 ошибка первой порции (malformed) и «Повторить»",
+          "file": "ac-09.spec.ts",
+          "status": "passed",
+          "durationMs": 980
+        },
+        {
+          "title": "AC-09 загрузка следующей порции: индикатор «Загружаем ещё…» с ролью status, строки остаются",
+          "file": "ac-09.spec.ts",
+          "status": "passed",
+          "durationMs": 2557
+        },
+        {
+          "title": "AC-09 ошибка следующей порции: строки остаются, «Повторить» повторяет только догрузку",
+          "file": "ac-09.spec.ts",
+          "status": "passed",
+          "durationMs": 1244
+        },
+        {
+          "title": "AC-09 нет доступа (403)",
+          "file": "ac-09.spec.ts",
+          "status": "passed",
+          "durationMs": 662
+        }
+      ]
+    },
+    "AC-10": {
+      "status": "passed",
+      "tests": [
+        {
+          "title": "AC-10 фильтры и сортировка отражаются в адресной строке, сортировка по умолчанию не пишется",
+          "file": "ac-10.spec.ts",
+          "status": "passed",
+          "durationMs": 2044
+        },
+        {
+          "title": "AC-10 ссылка с параметрами открывает то же состояние",
+          "file": "ac-10.spec.ts",
+          "status": "passed",
+          "durationMs": 914
+        },
+        {
+          "title": "AC-10 некорректные значения параметров игнорируются",
+          "file": "ac-10.spec.ts",
+          "status": "passed",
+          "durationMs": 888
+        }
+      ]
+    },
+    "AC-11": {
+      "status": "passed",
+      "tests": [
+        {
+          "title": "AC-11 «Назад» браузера: фильтры, сортировка, строки без повторного запроса, строка перехода видна",
+          "file": "ac-11.spec.ts",
+          "status": "passed",
+          "durationMs": 2073
+        },
+        {
+          "title": "AC-11 кнопка «Назад» приложения: то же восстановление",
+          "file": "ac-11.spec.ts",
+          "status": "passed",
+          "durationMs": 2117
+        },
+        {
+          "title": "AC-11 возврат позже 60 секунд: строки видны сразу и обновляются в фоне",
+          "file": "ac-11.spec.ts",
+          "status": "passed",
+          "durationMs": 1647
+        }
+      ]
+    },
+    "AC-12": {
+      "status": "passed",
+      "tests": [
+        {
+          "title": "AC-12 после перезагрузки восстанавливаются фильтры и сортировка",
+          "file": "ac-12.spec.ts",
+          "status": "passed",
+          "durationMs": 2646
+        },
+        {
+          "title": "AC-12 после перезагрузки позиция прокрутки не восстанавливается (п. 9.2)",
+          "file": "ac-12.spec.ts",
+          "status": "passed",
+          "durationMs": 3972
+        }
+      ]
+    },
+    "AC-13": {
+      "status": "failed",
+      "reason": "AC-13 скрытая колонка сохраняется между сессиями, не попадает в адрес, у другого агента своя настройка: Test timeout of 60000ms exceeded.",
+      "tests": [
+        {
+          "title": "AC-13 скрытая колонка сохраняется между сессиями, не попадает в адрес, у другого агента своя настройка",
+          "file": "ac-13.spec.ts",
+          "status": "timedOut",
+          "durationMs": 65012,
+          "error": "Test timeout of 60000ms exceeded."
+        },
+        {
+          "title": "AC-13 «ФИО» скрыть нельзя, «По умолчанию» возвращает исходный набор",
+          "file": "ac-13.spec.ts",
+          "status": "timedOut",
+          "durationMs": 65011,
+          "error": "Test timeout of 60000ms exceeded."
+        }
+      ]
+    },
+    "AC-14": {
+      "status": "failed",
+      "reason": "AC-14 строка доступна по Tab, Enter открывает карточку этого клиента: Test timeout of 60000ms exceeded.",
+      "tests": [
+        {
+          "title": "AC-14 у полей фильтров есть доступные подписи",
+          "file": "ac-14.spec.ts",
+          "status": "passed",
+          "durationMs": 764
+        },
+        {
+          "title": "AC-14 таблица: семантика таблицы, статус передаётся текстом",
+          "file": "ac-14.spec.ts",
+          "status": "passed",
+          "durationMs": 853
+        },
+        {
+          "title": "AC-14 строка доступна по Tab, Enter открывает карточку этого клиента",
+          "file": "ac-14.spec.ts",
+          "status": "timedOut",
+          "durationMs": 65011,
+          "error": "Test timeout of 60000ms exceeded."
+        }
+      ]
+    },
+    "AC-15": {
+      "status": "passed",
+      "tests": [
+        {
+          "title": "AC-15 при 10 000 загруженных строк в DOM не более 60 строк таблицы",
+          "file": "ac-15.spec.ts",
+          "status": "passed",
+          "durationMs": 51334
+        }
+      ]
+    }
+  }
+}

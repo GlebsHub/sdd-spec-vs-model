@@ -1,0 +1,26 @@
+.root {
+  height: 100%;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.headerContent {
+  height: 100%;
+}
+
+.menu {
+  flex: 1;
+  min-width: 0;
+  border-bottom: none;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+}

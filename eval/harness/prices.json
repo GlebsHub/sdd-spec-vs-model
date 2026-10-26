@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-10-22",
+  "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+  "unit": "USD per 1M tokens",
+  "notes": [
+    "Публичные цены Claude API. Условная стоимость прогона = токены из лога × эти цены; подписка фактически не тарифицируется по токенам.",
+    "claude-haiku-5-5 тарифицируется по длине промпта каждого запроса: вход + запись кэша + чтение кэша > 100 000 токенов — тариф longContext.",
+    "claude-haiku-4-5 — фоновая модель Claude Code для служебных запросов."
+  ],
+  "models": {
+    "claude-sonnet-5-5": { "input": 2, "cacheWrite5m": 2.5, "cacheWrite1h": 4, "cacheRead": 0.1, "output": 10 },
+    "claude-haiku-5-5": {
+      "input": 0.1, "cacheWrite5m": 0.125, "cacheWrite1h": 0.2, "cacheRead": 0.01, "output": 0.5,
+      "longContext": { "thresholdTokens": 100000, "input": 0.5, "cacheWrite5m": 0.625, "cacheWrite1h": 1, "cacheRead": 0.05, "output": 2.5 }
+    },
+    "claude-haiku-4-5": { "input": 1, "cacheWrite5m": 1.25, "cacheWrite1h": 2, "cacheRead": 0.1, "output": 5 }
+  }
+}

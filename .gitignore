@@ -1,0 +1,19 @@
+# Зависимости и артефакты сборки и тестов
+node_modules/
+dist/
+test-results/
+playwright-report/
+.acceptance/
+.screens/
+
+# Логи, локальные настройки, секреты (токен подписки хранится вне репозитория)
+*.log
+.env
+.env.*
+*.local
+.claude/settings.local.json
+
+# ОС и редакторы
+.DS_Store
+.vscode/
+.idea/

@@ -1,0 +1,369 @@
+{
+  "generatedAt": "2026-10-26T07:50:12.020Z",
+  "prices": {
+    "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+    "checkedAt": "2026-10-22"
+  },
+  "configs": [
+    {
+      "id": "H-brief-off",
+      "model": "claude-haiku-5-5",
+      "spec": "brief",
+      "contour": false,
+      "runs": 1,
+      "incomplete": true,
+      "runIds": [
+        1
+      ],
+      "acShare": {
+        "mean": 0.2,
+        "min": 0.2,
+        "max": 0.2,
+        "stdev": null
+      },
+      "acPerRun": [
+        3
+      ],
+      "flakyPerRun": [
+        []
+      ],
+      "accepted": 0,
+      "protectionViolations": 0,
+      "timeouts": 0,
+      "leakSuspects": 0,
+      "tokensMean": {
+        "input": 2172,
+        "output": 142430,
+        "cacheWrite": 182395,
+        "cacheRead": 3749258
+      },
+      "wallMinutesMean": 10.854033333333334,
+      "turnsMean": 57,
+      "blockedCheckAttemptsMean": 3,
+      "costUsd": {
+        "meanPerRun": 0.4888943599999999,
+        "total": 0.4888943599999999,
+        "backgroundMeanPerRun": 0.000643
+      },
+      "costPerAcceptedUsd": null,
+      "costPerAcUsd": 0.16296478666666664,
+      "acPassRate": {
+        "AC-01": 0,
+        "AC-02": 0,
+        "AC-03": 1,
+        "AC-04": 1,
+        "AC-05": 0,
+        "AC-06": 0,
+        "AC-07": 0,
+        "AC-08": 0,
+        "AC-09": 0,
+        "AC-10": 0,
+        "AC-11": 0,
+        "AC-12": 0,
+        "AC-13": 0,
+        "AC-14": 0,
+        "AC-15": 1
+      }
+    },
+    {
+      "id": "H-full-off",
+      "model": "claude-haiku-5-5",
+      "spec": "full",
+      "contour": false,
+      "runs": 1,
+      "incomplete": true,
+      "runIds": [
+        1
+      ],
+      "acShare": {
+        "mean": 0.6,
+        "min": 0.6,
+        "max": 0.6,
+        "stdev": null
+      },
+      "acPerRun": [
+        9
+      ],
+      "flakyPerRun": [
+        []
+      ],
+      "accepted": 0,
+      "protectionViolations": 0,
+      "timeouts": 0,
+      "leakSuspects": 0,
+      "tokensMean": {
+        "input": 2454,
+        "output": 170295,
+        "cacheWrite": 169384,
+        "cacheRead": 5318199
+      },
+      "wallMinutesMean": 13.1029,
+      "turnsMean": 65,
+      "blockedCheckAttemptsMean": 3,
+      "costUsd": {
+        "meanPerRun": 0.6224056700000001,
+        "total": 0.6224056700000001,
+        "backgroundMeanPerRun": 0.000643
+      },
+      "costPerAcceptedUsd": null,
+      "costPerAcUsd": 0.06915618555555557,
+      "acPassRate": {
+        "AC-01": 0,
+        "AC-02": 1,
+        "AC-03": 1,
+        "AC-04": 0,
+        "AC-05": 1,
+        "AC-06": 1,
+        "AC-07": 0,
+        "AC-08": 1,
+        "AC-09": 0,
+        "AC-10": 1,
+        "AC-11": 1,
+        "AC-12": 1,
+        "AC-13": 0,
+        "AC-14": 0,
+        "AC-15": 1
+      }
+    },
+    {
+      "id": "H-brief-on",
+      "model": "claude-haiku-5-5",
+      "spec": "brief",
+      "contour": true,
+      "runs": 1,
+      "incomplete": true,
+      "runIds": [
+        1
+      ],
+      "acShare": {
+        "mean": 0.13333333333333333,
+        "min": 0.13333333333333333,
+        "max": 0.13333333333333333,
+        "stdev": null
+      },
+      "acPerRun": [
+        2
+      ],
+      "flakyPerRun": [
+        []
+      ],
+      "accepted": 0,
+      "protectionViolations": 0,
+      "timeouts": 0,
+      "leakSuspects": 0,
+      "tokensMean": {
+        "input": 3409,
+        "output": 159086,
+        "cacheWrite": 202122,
+        "cacheRead": 10626411
+      },
+      "wallMinutesMean": 15.543383333333333,
+      "turnsMean": 110,
+      "blockedCheckAttemptsMean": 0,
+      "costUsd": {
+        "meanPerRun": 0.9075201500000001,
+        "total": 0.9075201500000001,
+        "backgroundMeanPerRun": 0.0006529999999999999
+      },
+      "costPerAcceptedUsd": null,
+      "costPerAcUsd": 0.45376007500000004,
+      "acPassRate": {
+        "AC-01": 0,
+        "AC-02": 0,
+        "AC-03": 1,
+        "AC-04": 0,
+        "AC-05": 0,
+        "AC-06": 0,
+        "AC-07": 0,
+        "AC-08": 0,
+        "AC-09": 0,
+        "AC-10": 0,
+        "AC-11": 0,
+        "AC-12": 0,
+        "AC-13": 0,
+        "AC-14": 0,
+        "AC-15": 1
+      }
+    },
+    {
+      "id": "H-full-on",
+      "model": "claude-haiku-5-5",
+      "spec": "full",
+      "contour": true,
+      "runs": 1,
+      "incomplete": true,
+      "runIds": [
+        1
+      ],
+      "acShare": {
+        "mean": 0.9333333333333333,
+        "min": 0.9333333333333333,
+        "max": 0.9333333333333333,
+        "stdev": null
+      },
+      "acPerRun": [
+        14
+      ],
+      "flakyPerRun": [
+        []
+      ],
+      "accepted": 0,
+      "protectionViolations": 0,
+      "timeouts": 0,
+      "leakSuspects": 0,
+      "tokensMean": {
+        "input": 3274,
+        "output": 170154,
+        "cacheWrite": 219516,
+        "cacheRead": 11236788
+      },
+      "wallMinutesMean": 17.404766666666667,
+      "turnsMean": 120,
+      "blockedCheckAttemptsMean": 0,
+      "costUsd": {
+        "meanPerRun": 1.02875478,
+        "total": 1.02875478,
+        "backgroundMeanPerRun": 0.0006529999999999999
+      },
+      "costPerAcceptedUsd": null,
+      "costPerAcUsd": 0.07348248428571429,
+      "acPassRate": {
+        "AC-01": 1,
+        "AC-02": 0,
+        "AC-03": 1,
+        "AC-04": 1,
+        "AC-05": 1,
+        "AC-06": 1,
+        "AC-07": 1,
+        "AC-08": 1,
+        "AC-09": 1,
+        "AC-10": 1,
+        "AC-11": 1,
+        "AC-12": 1,
+        "AC-13": 1,
+        "AC-14": 1,
+        "AC-15": 1
+      }
+    },
+    {
+      "id": "S-full-off",
+      "model": "claude-sonnet-5-5",
+      "spec": "full",
+      "contour": false,
+      "runs": 1,
+      "incomplete": true,
+      "runIds": [
+        1
+      ],
+      "acShare": {
+        "mean": 1,
+        "min": 1,
+        "max": 1,
+        "stdev": null
+      },
+      "acPerRun": [
+        15
+      ],
+      "flakyPerRun": [
+        []
+      ],
+      "accepted": 1,
+      "protectionViolations": 0,
+      "timeouts": 0,
+      "leakSuspects": 0,
+      "tokensMean": {
+        "input": 2599,
+        "output": 154981,
+        "cacheWrite": 240651,
+        "cacheRead": 7395334
+      },
+      "wallMinutesMean": 20.161233333333332,
+      "turnsMean": 101,
+      "blockedCheckAttemptsMean": 5,
+      "costUsd": {
+        "meanPerRun": 3.256492400000001,
+        "total": 3.256492400000001,
+        "backgroundMeanPerRun": 0.0006529999999999999
+      },
+      "costPerAcceptedUsd": 3.256492400000001,
+      "costPerAcUsd": 0.2170994933333334,
+      "acPassRate": {
+        "AC-01": 1,
+        "AC-02": 1,
+        "AC-03": 1,
+        "AC-04": 1,
+        "AC-05": 1,
+        "AC-06": 1,
+        "AC-07": 1,
+        "AC-08": 1,
+        "AC-09": 1,
+        "AC-10": 1,
+        "AC-11": 1,
+        "AC-12": 1,
+        "AC-13": 1,
+        "AC-14": 1,
+        "AC-15": 1
+      }
+    },
+    {
+      "id": "S-brief-off",
+      "model": "claude-sonnet-5-5",
+      "spec": "brief",
+      "contour": false,
+      "runs": 1,
+      "incomplete": true,
+      "runIds": [
+        1
+      ],
+      "acShare": {
+        "mean": 0.2,
+        "min": 0.2,
+        "max": 0.2,
+        "stdev": null
+      },
+      "acPerRun": [
+        3
+      ],
+      "flakyPerRun": [
+        []
+      ],
+      "accepted": 0,
+      "protectionViolations": 0,
+      "timeouts": 0,
+      "leakSuspects": 0,
+      "tokensMean": {
+        "input": 6161,
+        "output": 111490,
+        "cacheWrite": 183659,
+        "cacheRead": 4951191
+      },
+      "wallMinutesMean": 12.874883333333333,
+      "turnsMean": 51,
+      "blockedCheckAttemptsMean": 7,
+      "costUsd": {
+        "meanPerRun": 2.3563341000000007,
+        "total": 2.3563341000000007,
+        "backgroundMeanPerRun": 0.000643
+      },
+      "costPerAcceptedUsd": null,
+      "costPerAcUsd": 0.7854447000000002,
+      "acPassRate": {
+        "AC-01": 0,
+        "AC-02": 0,
+        "AC-03": 1,
+        "AC-04": 1,
+        "AC-05": 0,
+        "AC-06": 0,
+        "AC-07": 0,
+        "AC-08": 0,
+        "AC-09": 0,
+        "AC-10": 0,
+        "AC-11": 0,
+        "AC-12": 0,
+        "AC-13": 0,
+        "AC-14": 0,
+        "AC-15": 1
+      }
+    }
+  ]
+}
